@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" xmlns:fbc="http://www.sbml.org/sbml/level3/version1/fbc/version2" sboTerm="SBO:0000624" level="3" version="1" fbc:required="false">
+  <model metaid="meta_test_model" id="test_model" fbc:strict="true">
+    <listOfUnitDefinitions>
+      <unitDefinition id="mmol_per_gDW_per_hr">
+        <listOfUnits>
+          <unit kind="mole" exponent="1" scale="-3" multiplier="1"/>
+          <unit kind="gram" exponent="-1" scale="0" multiplier="1"/>
+          <unit kind="second" exponent="-1" scale="0" multiplier="3600"/>
+        </listOfUnits>
+      </unitDefinition>
+    </listOfUnitDefinitions>
+    <listOfCompartments>
+      <compartment id="e" constant="true"/>
+      <compartment id="c" constant="true"/>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species id="M_A_e" name="A" compartment="e" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" fbc:chemicalFormula="C11H21N2"/>
+      <species id="M_B_e" name="B" compartment="e" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" fbc:chemicalFormula="C8H18"/>
+      <species id="M_C_e" name="C" compartment="e" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" fbc:chemicalFormula="C8H18"/>
+      <species id="M_F_e" name="F" compartment="e" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" fbc:chemicalFormula="C8H18"/>
+      <species id="M_G_e" name="G" compartment="e" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" fbc:chemicalFormula="C8H18"/>
+      <species id="M_H_e" name="H" compartment="e" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" fbc:chemicalFormula="C8H18"/>
+      <species id="M_A_c" name="A" compartment="c" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" fbc:chemicalFormula="C11H21N2"/>
+      <species id="M_B_c" name="B" compartment="c" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" fbc:chemicalFormula="C8H18"/>
+      <species id="M_C_c" name="C" compartment="c" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" fbc:chemicalFormula="C8H18"/>
+      <species id="M_F_c" name="F" compartment="c" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" fbc:chemicalFormula="C8H18"/>
+      <species id="M_G_c" name="G" compartment="c" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" fbc:chemicalFormula="C8H18"/>
+      <species id="M_H_c" name="H" compartment="c" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" fbc:chemicalFormula="C8H18"/>
+      <species id="M_D_c" name="D" compartment="c" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" fbc:chemicalFormula="C4H10"/>
+      <species id="M_E_c" name="E" compartment="c" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" fbc:chemicalFormula="C6H14"/>
+    </listOfSpecies>
+    <listOfParameters>
+      <parameter sboTerm="SBO:0000626" id="cobra_default_lb" value="-1000" constant="true"/>
+      <parameter sboTerm="SBO:0000626" id="cobra_default_ub" value="1000" constant="true"/>
+      <parameter sboTerm="SBO:0000626" id="cobra_0_bound" value="0" constant="true"/>
+      <parameter sboTerm="SBO:0000626" id="minus_inf" value="-INF" constant="true"/>
+      <parameter sboTerm="SBO:0000626" id="plus_inf" value="INF" constant="true"/>
+      <parameter sboTerm="SBO:0000625" id="R_R_A_e_ex_lower_bound" value="-50" units="mmol_per_gDW_per_hr" constant="true"/>
+      <parameter sboTerm="SBO:0000625" id="R_R_A_e_ex_upper_bound" value="50" units="mmol_per_gDW_per_hr" constant="true"/>
+      <parameter sboTerm="SBO:0000625" id="R_R_B_e_ex_lower_bound" value="-50" units="mmol_per_gDW_per_hr" constant="true"/>
+      <parameter sboTerm="SBO:0000625" id="R_R_B_e_ex_upper_bound" value="50" units="mmol_per_gDW_per_hr" constant="true"/>
+      <parameter sboTerm="SBO:0000625" id="R_R_C_e_ex_lower_bound" value="-50" units="mmol_per_gDW_per_hr" constant="true"/>
+      <parameter sboTerm="SBO:0000625" id="R_R_C_e_ex_upper_bound" value="50" units="mmol_per_gDW_per_hr" constant="true"/>
+      <parameter sboTerm="SBO:0000625" id="R_R_F_e_ex_upper_bound" value="50" units="mmol_per_gDW_per_hr" constant="true"/>
+      <parameter sboTerm="SBO:0000625" id="R_R_G_e_ex_upper_bound" value="50" units="mmol_per_gDW_per_hr" constant="true"/>
+      <parameter sboTerm="SBO:0000625" id="R_R_H_e_ex_upper_bound" value="50" units="mmol_per_gDW_per_hr" constant="true"/>
+      <parameter sboTerm="SBO:0000625" id="R_R_A_imp_lower_bound" value="-100" units="mmol_per_gDW_per_hr" constant="true"/>
+      <parameter sboTerm="SBO:0000625" id="R_R_A_imp_upper_bound" value="100" units="mmol_per_gDW_per_hr" constant="true"/>
+      <parameter sboTerm="SBO:0000625" id="R_R_B_imp_lower_bound" value="-100" units="mmol_per_gDW_per_hr" constant="true"/>
+      <parameter sboTerm="SBO:0000625" id="R_R_B_imp_upper_bound" value="100" units="mmol_per_gDW_per_hr" constant="true"/>
+      <parameter sboTerm="SBO:0000625" id="R_R_C_imp_lower_bound" value="-100" units="mmol_per_gDW_per_hr" constant="true"/>
+      <parameter sboTerm="SBO:0000625" id="R_R_C_imp_upper_bound" value="100" units="mmol_per_gDW_per_hr" constant="true"/>
+      <parameter sboTerm="SBO:0000625" id="R_R_F_exp_lower_bound" value="-100" units="mmol_per_gDW_per_hr" constant="true"/>
+      <parameter sboTerm="SBO:0000625" id="R_R_F_exp_upper_bound" value="100" units="mmol_per_gDW_per_hr" constant="true"/>
+      <parameter sboTerm="SBO:0000625" id="R_R_G_exp_lower_bound" value="-100" units="mmol_per_gDW_per_hr" constant="true"/>
+      <parameter sboTerm="SBO:0000625" id="R_R_G_exp_upper_bound" value="100" units="mmol_per_gDW_per_hr" constant="true"/>
+      <parameter sboTerm="SBO:0000625" id="R_R_H_exp_lower_bound" value="-100" units="mmol_per_gDW_per_hr" constant="true"/>
+      <parameter sboTerm="SBO:0000625" id="R_R_H_exp_upper_bound" value="100" units="mmol_per_gDW_per_hr" constant="true"/>
+      <parameter sboTerm="SBO:0000625" id="R_r_A_B_D_E_lower_bound" value="-100" units="mmol_per_gDW_per_hr" constant="true"/>
+      <parameter sboTerm="SBO:0000625" id="R_r_A_B_D_E_upper_bound" value="100" units="mmol_per_gDW_per_hr" constant="true"/>
+      <parameter sboTerm="SBO:0000625" id="R_r_C_E_F_lower_bound" value="-100" units="mmol_per_gDW_per_hr" constant="true"/>
+      <parameter sboTerm="SBO:0000625" id="R_r_C_E_F_upper_bound" value="100" units="mmol_per_gDW_per_hr" constant="true"/>
+      <parameter sboTerm="SBO:0000625" id="R_r_C_H_lower_bound" value="-100" units="mmol_per_gDW_per_hr" constant="true"/>
+      <parameter sboTerm="SBO:0000625" id="R_r_C_H_upper_bound" value="100" units="mmol_per_gDW_per_hr" constant="true"/>
+      <parameter sboTerm="SBO:0000625" id="R_r_D_G_lower_bound" value="-100" units="mmol_per_gDW_per_hr" constant="true"/>
+      <parameter sboTerm="SBO:0000625" id="R_r_D_G_upper_bound" value="100" units="mmol_per_gDW_per_hr" constant="true"/>
+    </listOfParameters>
+    <listOfReactions>
+      <reaction id="R_R_A_e_ex" name="External A exchange" reversible="true" fast="false" fbc:lowerFluxBound="R_R_A_e_ex_lower_bound" fbc:upperFluxBound="R_R_A_e_ex_upper_bound">
+        <listOfReactants>
+          <speciesReference species="M_A_e" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+      </reaction>
+      <reaction id="R_R_B_e_ex" name="External B exchange" reversible="true" fast="false" fbc:lowerFluxBound="R_R_B_e_ex_lower_bound" fbc:upperFluxBound="R_R_B_e_ex_upper_bound">
+        <listOfReactants>
+          <speciesReference species="M_B_e" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+      </reaction>
+      <reaction id="R_R_C_e_ex" name="External C exchange" reversible="true" fast="false" fbc:lowerFluxBound="R_R_C_e_ex_lower_bound" fbc:upperFluxBound="R_R_C_e_ex_upper_bound">
+        <listOfReactants>
+          <speciesReference species="M_C_e" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+      </reaction>
+      <reaction id="R_R_F_e_ex" name="External F exchange" reversible="false" fast="false" fbc:lowerFluxBound="cobra_0_bound" fbc:upperFluxBound="R_R_F_e_ex_upper_bound">
+        <listOfReactants>
+          <speciesReference species="M_F_e" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+      </reaction>
+      <reaction id="R_R_G_e_ex" name="External G exchange" reversible="false" fast="false" fbc:lowerFluxBound="cobra_0_bound" fbc:upperFluxBound="R_R_G_e_ex_upper_bound">
+        <listOfReactants>
+          <speciesReference species="M_G_e" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+      </reaction>
+      <reaction id="R_R_H_e_ex" name="External H exchange" reversible="false" fast="false" fbc:lowerFluxBound="cobra_0_bound" fbc:upperFluxBound="R_R_H_e_ex_upper_bound">
+        <listOfReactants>
+          <speciesReference species="M_H_e" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+      </reaction>
+      <reaction id="R_R_A_imp" name="A import reaction" reversible="true" fast="false" fbc:lowerFluxBound="R_R_A_imp_lower_bound" fbc:upperFluxBound="R_R_A_imp_upper_bound">
+        <listOfReactants>
+          <speciesReference species="M_A_e" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="M_A_c" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <fbc:geneProductAssociation>
+          <fbc:geneProductRef fbc:geneProduct="G_g_A_imp"/>
+        </fbc:geneProductAssociation>
+      </reaction>
+      <reaction id="R_R_B_imp" name="B import reaction" reversible="true" fast="false" fbc:lowerFluxBound="R_R_B_imp_lower_bound" fbc:upperFluxBound="R_R_B_imp_upper_bound">
+        <listOfReactants>
+          <speciesReference species="M_B_e" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="M_B_c" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <fbc:geneProductAssociation>
+          <fbc:geneProductRef fbc:geneProduct="G_g_B_imp"/>
+        </fbc:geneProductAssociation>
+      </reaction>
+      <reaction id="R_R_C_imp" name="C import reaction" reversible="true" fast="false" fbc:lowerFluxBound="R_R_C_imp_lower_bound" fbc:upperFluxBound="R_R_C_imp_upper_bound">
+        <listOfReactants>
+          <speciesReference species="M_C_e" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="M_C_c" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <fbc:geneProductAssociation>
+          <fbc:geneProductRef fbc:geneProduct="G_g_C_imp"/>
+        </fbc:geneProductAssociation>
+      </reaction>
+      <reaction id="R_R_F_exp" name="F export reaction" reversible="true" fast="false" fbc:lowerFluxBound="R_R_F_exp_lower_bound" fbc:upperFluxBound="R_R_F_exp_upper_bound">
+        <listOfReactants>
+          <speciesReference species="M_F_c" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="M_F_e" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <fbc:geneProductAssociation>
+          <fbc:geneProductRef fbc:geneProduct="G_g_F_exp"/>
+        </fbc:geneProductAssociation>
+      </reaction>
+      <reaction id="R_R_G_exp" name="G export reaction" reversible="true" fast="false" fbc:lowerFluxBound="R_R_G_exp_lower_bound" fbc:upperFluxBound="R_R_G_exp_upper_bound">
+        <listOfReactants>
+          <speciesReference species="M_G_c" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="M_G_e" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <fbc:geneProductAssociation>
+          <fbc:geneProductRef fbc:geneProduct="G_g_G_exp"/>
+        </fbc:geneProductAssociation>
+      </reaction>
+      <reaction id="R_R_H_exp" name="H export reaction" reversible="true" fast="false" fbc:lowerFluxBound="R_R_H_exp_lower_bound" fbc:upperFluxBound="R_R_H_exp_upper_bound">
+        <listOfReactants>
+          <speciesReference species="M_H_c" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="M_H_e" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <fbc:geneProductAssociation>
+          <fbc:geneProductRef fbc:geneProduct="G_g_H_exp"/>
+        </fbc:geneProductAssociation>
+      </reaction>
+      <reaction id="R_r_A_B_D_E" name="A + B -&gt; D + E" reversible="true" fast="false" fbc:lowerFluxBound="R_r_A_B_D_E_lower_bound" fbc:upperFluxBound="R_r_A_B_D_E_upper_bound">
+        <listOfReactants>
+          <speciesReference species="M_A_c" stoichiometry="1" constant="true"/>
+          <speciesReference species="M_B_c" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="M_D_c" stoichiometry="1" constant="true"/>
+          <speciesReference species="M_E_c" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <fbc:geneProductAssociation>
+          <fbc:geneProductRef fbc:geneProduct="G_g_A_B_D_E"/>
+        </fbc:geneProductAssociation>
+      </reaction>
+      <reaction id="R_r_C_E_F" name="C -&gt; F" reversible="true" fast="false" fbc:lowerFluxBound="R_r_C_E_F_lower_bound" fbc:upperFluxBound="R_r_C_E_F_upper_bound">
+        <listOfReactants>
+          <speciesReference species="M_C_c" stoichiometry="1" constant="true"/>
+          <speciesReference species="M_E_c" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="M_F_c" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <fbc:geneProductAssociation>
+          <fbc:geneProductRef fbc:geneProduct="G_g_C_E_F"/>
+        </fbc:geneProductAssociation>
+      </reaction>
+      <reaction id="R_r_C_H" name="C -&gt; H" reversible="true" fast="false" fbc:lowerFluxBound="R_r_C_H_lower_bound" fbc:upperFluxBound="R_r_C_H_upper_bound">
+        <listOfReactants>
+          <speciesReference species="M_C_c" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="M_H_c" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <fbc:geneProductAssociation>
+          <fbc:geneProductRef fbc:geneProduct="G_g_C_H"/>
+        </fbc:geneProductAssociation>
+      </reaction>
+      <reaction id="R_r_D_G" name="D -&gt; G" reversible="true" fast="false" fbc:lowerFluxBound="R_r_D_G_lower_bound" fbc:upperFluxBound="R_r_D_G_upper_bound">
+        <listOfReactants>
+          <speciesReference species="M_D_c" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="M_G_c" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <fbc:geneProductAssociation>
+          <fbc:geneProductRef fbc:geneProduct="G_g_D_G"/>
+        </fbc:geneProductAssociation>
+      </reaction>
+    </listOfReactions>
+    <fbc:listOfObjectives fbc:activeObjective="obj">
+      <fbc:objective fbc:id="obj" fbc:type="maximize">
+        <fbc:listOfFluxObjectives>
+          <fbc:fluxObjective fbc:reaction="R_r_D_G" fbc:coefficient="1"/>
+        </fbc:listOfFluxObjectives>
+      </fbc:objective>
+    </fbc:listOfObjectives>
+    <fbc:listOfGeneProducts>
+      <fbc:geneProduct fbc:id="G_g_A_imp" fbc:name="G_g_A_imp" fbc:label="G_g_A_imp"/>
+      <fbc:geneProduct fbc:id="G_g_B_imp" fbc:name="G_g_B_imp" fbc:label="G_g_B_imp"/>
+      <fbc:geneProduct fbc:id="G_g_C_imp" fbc:name="G_g_C_imp" fbc:label="G_g_C_imp"/>
+      <fbc:geneProduct fbc:id="G_g_F_exp" fbc:name="G_g_F_exp" fbc:label="G_g_F_exp"/>
+      <fbc:geneProduct fbc:id="G_g_G_exp" fbc:name="G_g_G_exp" fbc:label="G_g_G_exp"/>
+      <fbc:geneProduct fbc:id="G_g_H_exp" fbc:name="G_g_H_exp" fbc:label="G_g_H_exp"/>
+      <fbc:geneProduct fbc:id="G_g_A_B_D_E" fbc:name="G_g_A_B_D_E" fbc:label="G_g_A_B_D_E"/>
+      <fbc:geneProduct fbc:id="G_g_C_E_F" fbc:name="G_g_C_E_F" fbc:label="G_g_C_E_F"/>
+      <fbc:geneProduct fbc:id="G_g_C_H" fbc:name="G_g_C_H" fbc:label="G_g_C_H"/>
+      <fbc:geneProduct fbc:id="G_g_D_G" fbc:name="G_g_D_G" fbc:label="G_g_D_G"/>
+    </fbc:listOfGeneProducts>
+  </model>
+</sbml>
