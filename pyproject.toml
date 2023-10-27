@@ -7,7 +7,7 @@ license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.9,<3.13"
+python = ">=3.9,<3.11"
 cobra = "^0.27.0"
 scipy = "^1.11.3"
 numpy = "^1.26.0"
