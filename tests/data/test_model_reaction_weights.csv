@@ -1,0 +1,16 @@
+R_A_e_ex,0
+R_B_e_ex,0
+R_C_e_ex,0
+R_F_e_ex,0
+R_G_e_ex,0
+R_H_e_ex,0
+R_A_imp,0
+R_B_imp,0
+R_C_imp,0
+R_F_exp,0
+R_G_exp,0
+R_H_exp,0
+r_A_B_D_E,1
+r_C_E_F,-1
+r_C_H,-1
+r_D_G,1

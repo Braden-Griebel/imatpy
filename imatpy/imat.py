@@ -1,7 +1,9 @@
 """
 Submodule with functions for adding iMAT constraints and objectives to a cobra model, and running iMAT
 """
+
 # Standard Library Imports
+import re
 from typing import Union
 
 # External Imports
@@ -18,6 +20,8 @@ DEFAULTS = {
     "threshold": 1e-3,
     "tolerance": 1e-7,
 }
+
+BINARY_REGEX = re.compile(r"y_(pos|neg)_(.+)")
 
 
 # region: Main iMat Function
@@ -47,6 +51,47 @@ def imat(model: cobra.Model,
 
 
 # endregion: Main iMat Function
+
+# region: iMAT extension functions
+def flux_to_binary(fluxes: pd.Series, epsilon: float = DEFAULTS["epsilon"], threshold: float = DEFAULTS["threshold"],
+                   which_reactions: str = "active") \
+        -> pd.Series:
+    """
+    Convert a pandas series of fluxes to a pandas series of binary values.
+
+    :param fluxes: A pandas series of fluxes.
+    :type fluxes: pandas.Series
+    :param epsilon: The epsilon value to use for iMAT (default: 1e-3). Represents the minimum flux for a reaction to
+        be considered on.
+    :type epsilon: float
+    :param threshold: The threshold value to use for iMAT (default: 1e-4). Represents the maximum flux for a reaction
+        to be considered off.
+    :type threshold: float
+    :param which_reactions: Which reactions should be the binary values? Options are "active", "inactive", "forward",
+        "reverse", or their first letters. Default is "active". "active" will return 1 for reactions with absolute value
+        of flux greater than epsilon, and 0 for reactions with flux less than epsilon. "inactive" will return 1 for
+        reactions with absolute value of flux less than threshold, and 0 for reactions with flux greater than threshold.
+        "forward" will return 1 for reactions with flux greater than epsilon, and 0 for reactions with flux less than
+        epsilon. "reverse" will return 1 for reactions with flux less than -epsilon, and 0 for reactions with flux
+        greater than -epsilon.
+    :type which_reactions: str
+    :return: A pandas series of binary values.
+    :rtype: pandas.Series
+    """
+    which_reactions = _parse_which_reactions(which_reactions)
+    if which_reactions == "forward":
+        return (fluxes > epsilon).astype(int)
+    elif which_reactions == "reverse":
+        return (fluxes < -epsilon).astype(int)
+    elif which_reactions == "active":
+        return ((fluxes > epsilon) | (fluxes < -epsilon)).astype(int)
+    elif which_reactions == "inactive":
+        return ((fluxes < threshold) & (fluxes > -threshold)).astype(int)
+    else:
+        raise ValueError("Couldn't Parse which_reactions, should be one of: active, inactive, forward, reverse")
+
+
+# endregion: iMAT extension functions
 
 # region: iMAT Helper Functions
 def add_imat_constraints_(model: cobra.Model,
@@ -124,7 +169,7 @@ def add_imat_objective_(model: cobra.Model, rxn_weights: Union[pd.Series, dict])
         # Adds the two variables to the rh list which will be used for sum
         rh_obj += [forward_variable, reverse_variable]
     for rxn in rl:  # For each lowly expressed reaction
-        variable = model.solver.variables[f"y_pos{rxn}"]
+        variable = model.solver.variables[f"y_pos_{rxn}"]
         rl_obj += [variable]  # Note: Only one variable for lowly expressed reactions
     imat_obj = model.solver.interface.Objective(sym.Add(*rh_obj) + sym.Add(*rl_obj), direction="max")
     model.objective = imat_obj
@@ -139,8 +184,13 @@ def add_imat_objective(model: cobra.Model, rxn_weights: Union[pd.Series, dict]) 
     :param rxn_weights: A dictionary or pandas series of reaction weights.
     :type rxn_weights: dict | pandas.Series
     :return: None
+
+    ..note::
+        By default this method uses `copy.deepcopy` rather than `model.copy`, because `model.copy` can change variable
+        types (from binary to continuous), which will cause issues with the iMAT solution.
     """
     imat_model = model.copy()
+    _enforce_binary(imat_model)
     add_imat_objective_(imat_model, rxn_weights)
     return imat_model
 
@@ -202,5 +252,27 @@ def _imat_neg_weight_(model: cobra.Model, rxn: str, threshold: float) -> None:
     reverse_constraint = model.solver.interface.Constraint(reaction_flux - lb * (1 - y_pos) + threshold * y_pos, lb=0,
                                                            name=f"reverse_constraint_{reaction.id}")
     model.solver.add(reverse_constraint)
+
+
+def _enforce_binary(model: cobra.Model):
+    """
+    Internal method for enforcing binary type for added binary variables
+    """
+    for var in model.solver.variables:
+        if BINARY_REGEX.search(var.name):
+            model.solver.variables[var.name].type = "binary"
+
+
+def _parse_which_reactions(which_reactions: str) -> str:
+    if which_reactions.lower() in ["active", "on"]:
+        return "active"
+    elif which_reactions.lower() in ["inactive", "off"]:
+        return "inactive"
+    elif which_reactions.lower() in ["forward", "f"]:
+        return "forward"
+    elif which_reactions.lower() in ["reverse", "r"]:
+        return "reverse"
+    else:
+        raise ValueError("Couldn't Parse which_reactions, should be one of: active, inactive, forward, reverse")
 
 # endregion: Internal Methods

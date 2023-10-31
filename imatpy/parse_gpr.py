@@ -25,7 +25,7 @@ def str_to_list(in_string: str, replacements: dict = None) -> list[str]:
         replacements = {"\\b[Aa][Nn][Dd]\\b": "AND",
                         "\\b[Oo][Rr]\\b": "OR",
                         "&&?": " AND ",
-                        "\|\|?": " OR ",}
+                        r"\|\|?": " OR ", }
     in_string = in_string.replace("(", " ( ").replace(")", " ) ")
     for key, value in replacements.items():
         in_string = re.sub(key, value, in_string)
