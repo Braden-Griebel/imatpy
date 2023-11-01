@@ -5,6 +5,7 @@ import pathlib
 import unittest
 
 # External Imports
+from cobra.core.configuration import Configuration
 import pandas as pd
 
 # Local Imports
@@ -92,8 +93,11 @@ class TestEvalGpr(unittest.TestCase):
 
 
 class TestGeneToRxnWeights(unittest.TestCase):
+    test_model = None
+
     @classmethod
     def setUpClass(cls):
+        Configuration().solver = "glpk"
         data_path = pathlib.Path(__file__).parent.joinpath("data")
         test_model_path = os.path.join(data_path, "test_model.json")
         cls.test_model = read_model(test_model_path)

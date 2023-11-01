@@ -1,28 +1,27 @@
 # Standard Library Imports
 import copy
-import os
+import importlib.util
 import pathlib
-import sys
 import unittest
+from unittest import skipIf
 
 # External Imports
-import cobra
-import numpy as np
+from cobra.core.configuration import Configuration
 import pandas as pd
 
 # Local Imports
-from imatpy.imat import _imat_neg_weight_, _imat_pos_weight_, add_imat_constraints, add_imat_constraints_, \
-    add_imat_objective, add_imat_objective_, imat, _enforce_binary, flux_to_binary
+import imatpy.imat
 from imatpy.model_utils import read_model, model_eq, _check_expression_eq
 
 
 def setup(cls):
+    Configuration().solver = "glpk"  # Use GLPK solver for testing
     cls.data_path = pathlib.Path(__file__).parent.absolute() / "data"
     cls.model = read_model(cls.data_path / "test_model.xml")
     cls.rxn_weights = pd.read_csv(cls.data_path / "test_model_reaction_weights.csv", index_col=0,
                                   header=None).squeeze("columns")
-    cls.epsilon = 1e-2
-    cls.threshold = 1e-3
+    cls.epsilon = 1
+    cls.threshold = 1e-2
 
 
 class TestAddSingleConstraints(unittest.TestCase):
@@ -38,7 +37,7 @@ class TestAddSingleConstraints(unittest.TestCase):
 
     def test_imat_neg_weight(self):
         test_model = self.model.copy()
-        _imat_neg_weight_(model=test_model, rxn="r_C_H", threshold=self.threshold)  # Add constraint
+        imatpy.imat._imat_neg_weight_(model=test_model, rxn="r_C_H", threshold=self.threshold)  # Add constraint
         # Check that the binary variable was added
         self.assertTrue("y_pos_r_C_H" in test_model.solver.variables)
         # Check the type of the added variable
@@ -57,7 +56,7 @@ class TestAddSingleConstraints(unittest.TestCase):
 
     def test_imat_pos_weight(self):
         test_model = self.model.copy()
-        _imat_pos_weight_(model=test_model, rxn="r_C_H", epsilon=self.epsilon)
+        imatpy.imat._imat_pos_weight_(model=test_model, rxn="r_C_H", epsilon=self.epsilon)
         # CHeck that the positive binary variable was added
         self.assertTrue("y_pos_r_C_H" in test_model.solver.variables)
         # Check that the negative binary variable was added
@@ -83,29 +82,29 @@ class TestAddImatConstraints(unittest.TestCase):
     def test_add_imat_constraints_inplace(self):
         test_model = self.model.copy()
         copy_model = self.model.copy()
-        add_imat_constraints_(model=test_model, rxn_weights=self.rxn_weights, epsilon=self.epsilon,
-                              threshold=self.threshold)
+        imatpy.imat.add_imat_constraints_(model=test_model, rxn_weights=self.rxn_weights, epsilon=self.epsilon,
+                                          threshold=self.threshold)
         # Check that the model was modified in place
         self.assertFalse(model_eq(test_model, copy_model))
         # Now, update the copy model according to the known weights
-        _imat_neg_weight_(model=copy_model, rxn="r_C_H", threshold=self.threshold)
-        _imat_neg_weight_(model=copy_model, rxn="r_C_E_F", threshold=self.threshold)
-        _imat_pos_weight_(model=copy_model, rxn="r_A_B_D_E", epsilon=self.epsilon)
-        _imat_pos_weight_(model=copy_model, rxn="r_D_G", epsilon=self.epsilon)
+        imatpy.imat._imat_neg_weight_(model=copy_model, rxn="r_C_H", threshold=self.threshold)
+        imatpy.imat._imat_neg_weight_(model=copy_model, rxn="r_C_E_F", threshold=self.threshold)
+        imatpy.imat._imat_pos_weight_(model=copy_model, rxn="r_A_B_D_E", epsilon=self.epsilon)
+        imatpy.imat._imat_pos_weight_(model=copy_model, rxn="r_D_G", epsilon=self.epsilon)
         self.assertTrue(model_eq(test_model, copy_model))
 
     def test_add_imat_constraints_not_inplace(self):
         test_model = self.model.copy()
         copy_model = test_model.copy()
-        updated_model = add_imat_constraints(model=test_model, rxn_weights=self.rxn_weights, epsilon=self.epsilon,
-                                             threshold=self.threshold)
+        updated_model = imatpy.imat.add_imat_constraints(model=test_model, rxn_weights=self.rxn_weights, epsilon=self.epsilon,
+                                                         threshold=self.threshold)
         # Check that the model was not modified in place
         self.assertTrue(model_eq(test_model, copy_model))
         # Now, update the copy model according to the known weights
-        _imat_neg_weight_(model=copy_model, rxn="r_C_H", threshold=self.threshold)
-        _imat_neg_weight_(model=copy_model, rxn="r_C_E_F", threshold=self.threshold)
-        _imat_pos_weight_(model=copy_model, rxn="r_A_B_D_E", epsilon=self.epsilon)
-        _imat_pos_weight_(model=copy_model, rxn="r_D_G", epsilon=self.epsilon)
+        imatpy.imat._imat_neg_weight_(model=copy_model, rxn="r_C_H", threshold=self.threshold)
+        imatpy.imat._imat_neg_weight_(model=copy_model, rxn="r_C_E_F", threshold=self.threshold)
+        imatpy.imat._imat_pos_weight_(model=copy_model, rxn="r_A_B_D_E", epsilon=self.epsilon)
+        imatpy.imat._imat_pos_weight_(model=copy_model, rxn="r_D_G", epsilon=self.epsilon)
         self.assertTrue(model_eq(updated_model, copy_model))
 
 
@@ -123,12 +122,12 @@ class TestAddImatObjective(unittest.TestCase):
     def test_add_objective_inplace(self):
         test_model = self.model.copy()
         # add imat constraints
-        add_imat_constraints_(model=test_model, rxn_weights=self.rxn_weights, epsilon=self.epsilon,
-                              threshold=self.threshold)
+        imatpy.imat.add_imat_constraints_(model=test_model, rxn_weights=self.rxn_weights, epsilon=self.epsilon,
+                                          threshold=self.threshold)
         copy_model = test_model.copy()
 
         # add imat objective
-        add_imat_objective_(model=test_model, rxn_weights=self.rxn_weights)
+        imatpy.imat.add_imat_objective_(model=test_model, rxn_weights=self.rxn_weights)
         # Check that the model was modified in place
         self.assertFalse(model_eq(test_model, copy_model))
         # Check that the objective was changed
@@ -138,14 +137,14 @@ class TestAddImatObjective(unittest.TestCase):
     def test_add_objective_not_inplace(self):
         test_model = self.model.copy()
         # add imat constraints
-        add_imat_constraints_(model=test_model, rxn_weights=self.rxn_weights, epsilon=self.epsilon,
-                              threshold=self.threshold)
+        imatpy.imat.add_imat_constraints_(model=test_model, rxn_weights=self.rxn_weights, epsilon=self.epsilon,
+                                          threshold=self.threshold)
         copy_model = copy.deepcopy(test_model)
-        _enforce_binary(model=copy_model)
+        imatpy.imat._enforce_binary(model=copy_model)
         # Check that the copy creates an identical model
         self.assertTrue(model_eq(test_model, copy_model, verbose=True))
         # add imat objective
-        updated_model = add_imat_objective(model=test_model, rxn_weights=self.rxn_weights)
+        updated_model = imatpy.imat.add_imat_objective(model=test_model, rxn_weights=self.rxn_weights)
         # Test that model wasn't modified in place
         self.assertTrue(model_eq(test_model, copy_model))
         # Test that updated model has different objective
@@ -166,19 +165,18 @@ class TestImat(unittest.TestCase):
     def setUpClass(cls):
         setup(cls)
 
-    def test_imat(self):
-        test_model = self.model.copy()
+    def imat_helper(self, test_model):
         copy_model = test_model.copy()
         # Perform iMAT
-        imat_res = imat(model=test_model, rxn_weights=self.rxn_weights, epsilon=self.epsilon,
-                        threshold=self.threshold)
+        imat_res = imatpy.imat.imat(model=test_model, rxn_weights=self.rxn_weights, epsilon=self.epsilon,
+                                    threshold=self.threshold)
         # Check that the model was not modified
         self.assertTrue(model_eq(test_model, copy_model))
         # Get the binary solution
-        bin_sol_active = flux_to_binary(fluxes=imat_res.fluxes, epsilon=self.epsilon, threshold=self.threshold,
-                                        which_reactions="active")
-        bin_sol_inactive = flux_to_binary(fluxes=imat_res.fluxes, epsilon=self.epsilon, threshold=self.threshold,
-                                          which_reactions="inactive")
+        bin_sol_active = imatpy.imat.flux_to_binary(fluxes=imat_res.fluxes, which_reactions="active", epsilon=self.epsilon,
+                                                    threshold=self.threshold)
+        bin_sol_inactive = imatpy.imat.flux_to_binary(fluxes=imat_res.fluxes, which_reactions="inactive", epsilon=self.epsilon,
+                                                      threshold=self.threshold)
         # Check that the binary solution is correct
         # Check that r_A_B_D_E is active
         self.assertTrue(bin_sol_active["r_A_B_D_E"])
@@ -186,6 +184,24 @@ class TestImat(unittest.TestCase):
         self.assertTrue(bin_sol_active["r_D_G"])
         # Check that r_C_H is inactive
         self.assertTrue(bin_sol_inactive["r_C_H"])
+
+    @skipIf(importlib.util.find_spec("cplex") is None, "cplex is not installed")
+    def test_imat_cplex(self):
+        test_model = self.model.copy()
+        test_model.solver = "cplex"
+        self.imat_helper(test_model)
+
+    @skipIf(importlib.util.find_spec("gurobipy") is None, "gurobipy is not installed")
+    def test_imat_gurobi(self):
+        test_model = self.model.copy()
+        test_model.solver = "gurobi"
+        self.imat_helper(test_model)
+
+    @skipIf(importlib.util.find_spec("swiglpk") is None, "glpk is not installed")
+    def test_imat_glpk(self):
+        test_model = self.model.copy()
+        test_model.solver = "glpk"
+        self.imat_helper(test_model)
 
 
 if __name__ == '__main__':

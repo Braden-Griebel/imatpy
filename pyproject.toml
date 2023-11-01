@@ -13,6 +13,8 @@ scipy = "^1.11.3"
 numpy = "^1.26.0"
 pandas = ">=1.0.0, <2.0.0"
 optlang = "^1.7.0"
+gurobipy = {version = "^10.0.3", optional = true}
+sympy = "^1.12"
 
 [tool.poetry.group.dev.dependencies]
 Sphinx = "^7.2.6"

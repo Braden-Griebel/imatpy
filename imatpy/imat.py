@@ -8,6 +8,7 @@ from typing import Union
 
 # External Imports
 import cobra
+from cobra.core.configuration import Configuration
 import numpy as np
 import pandas as pd
 import sympy as sym
@@ -18,7 +19,7 @@ import sympy as sym
 DEFAULTS = {
     "epsilon": 1e-2,
     "threshold": 1e-3,
-    "tolerance": 1e-7,
+    "tolerance": Configuration().tolerance,
 }
 
 BINARY_REGEX = re.compile(r"y_(pos|neg)_(.+)")
@@ -53,20 +54,14 @@ def imat(model: cobra.Model,
 # endregion: Main iMat Function
 
 # region: iMAT extension functions
-def flux_to_binary(fluxes: pd.Series, epsilon: float = DEFAULTS["epsilon"], threshold: float = DEFAULTS["threshold"],
-                   which_reactions: str = "active") \
+def flux_to_binary(fluxes: pd.Series, which_reactions: str = "active", epsilon: float = DEFAULTS["epsilon"],
+                   threshold: float = DEFAULTS["threshold"], tolerance=DEFAULTS["tolerance"]) \
         -> pd.Series:
     """
     Convert a pandas series of fluxes to a pandas series of binary values.
 
     :param fluxes: A pandas series of fluxes.
     :type fluxes: pandas.Series
-    :param epsilon: The epsilon value to use for iMAT (default: 1e-3). Represents the minimum flux for a reaction to
-        be considered on.
-    :type epsilon: float
-    :param threshold: The threshold value to use for iMAT (default: 1e-4). Represents the maximum flux for a reaction
-        to be considered off.
-    :type threshold: float
     :param which_reactions: Which reactions should be the binary values? Options are "active", "inactive", "forward",
         "reverse", or their first letters. Default is "active". "active" will return 1 for reactions with absolute value
         of flux greater than epsilon, and 0 for reactions with flux less than epsilon. "inactive" will return 1 for
@@ -75,18 +70,26 @@ def flux_to_binary(fluxes: pd.Series, epsilon: float = DEFAULTS["epsilon"], thre
         epsilon. "reverse" will return 1 for reactions with flux less than -epsilon, and 0 for reactions with flux
         greater than -epsilon.
     :type which_reactions: str
+    :param epsilon: The epsilon value to use for iMAT (default: 1e-3). Represents the minimum flux for a reaction to
+        be considered on.
+    :type epsilon: float
+    :param threshold: The threshold value to use for iMAT (default: 1e-4). Represents the maximum flux for a reaction
+        to be considered off.
+    :type threshold: float
+    :param tolerance: The tolerance of the solver. Default from cobra is 1e-7.
+    :type tolerance: float
     :return: A pandas series of binary values.
     :rtype: pandas.Series
     """
     which_reactions = _parse_which_reactions(which_reactions)
     if which_reactions == "forward":
-        return (fluxes > epsilon).astype(int)
+        return (fluxes >= (epsilon - tolerance)).astype(int)
     elif which_reactions == "reverse":
-        return (fluxes < -epsilon).astype(int)
+        return (fluxes <= (-epsilon + tolerance)).astype(int)
     elif which_reactions == "active":
-        return ((fluxes > epsilon) | (fluxes < -epsilon)).astype(int)
+        return ((fluxes >= epsilon - tolerance) | (fluxes <= -epsilon + tolerance)).astype(int)
     elif which_reactions == "inactive":
-        return ((fluxes < threshold) & (fluxes > -threshold)).astype(int)
+        return ((fluxes <= threshold + tolerance) & (fluxes >= -threshold - tolerance)).astype(int)
     else:
         raise ValueError("Couldn't Parse which_reactions, should be one of: active, inactive, forward, reverse")
 
