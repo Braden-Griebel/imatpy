@@ -53,23 +53,23 @@ def generate_model(model: cobra.Model,
     :rtype: cobra.Model
 
     .. seealso::
-        | :func:`_imat_restrictions` for more information on the imat_restrictions method.
-        | :func:`_simple_bounds` for more information on the simple_bounds method.
-        | :func:`_eliminate_below_threshold` for more information on the eliminate_below_threshold method.
-        | :func:`_fva` for more information on the fva method.
-        | :func:`_milp` for more information on the milp method.
+        | :func:`imat_constraint_model` for more information on the imat_restrictions method.
+        | :func:`simple_bounds_model` for more information on the simple_bounds method.
+        | :func:`subset_model` for more information on the eliminate_below_threshold method.
+        | :func:`fva_model` for more information on the fva method.
+        | :func:`milp_model` for more information on the milp method.
     """
     method = _parse_method(method)
-    if method == "imat_restrictions":
-        return _imat_restrictions(model, rxn_weights, epsilon, threshold, objective_tolerance)
+    if method == "imat_constraint":
+        return imat_constraint_model(model, rxn_weights, epsilon, threshold, objective_tolerance)
     elif method == "simple_bounds":
-        return _simple_bounds(model, rxn_weights, epsilon, threshold)
+        return simple_bounds_model(model, rxn_weights, epsilon, threshold)
     elif method == "subset":
-        return _subset(model, rxn_weights, epsilon, threshold)
+        return subset_model(model, rxn_weights, epsilon, threshold)
     elif method == "fva":
-        return _fva(model, rxn_weights, epsilon, threshold, objective_tolerance)
+        return fva_model(model, rxn_weights, epsilon, threshold, objective_tolerance)
     elif method == "milp":
-        return _milp(model, rxn_weights, epsilon, threshold)
+        return milp_model(model, rxn_weights, epsilon, threshold)
     else:
         raise ValueError(f"Invalid method: {method}. Valid methods are: 'simple_bounds', 'imat_restrictions', "
                          f"'eliminate_below_threshold', 'fva', 'milp'.")
@@ -79,7 +79,7 @@ def generate_model(model: cobra.Model,
 
 
 # region: Model Creation methods
-def _imat_restrictions(model, rxn_weights, epsilon, threshold, objective_tolerance):
+def imat_constraint_model(model, rxn_weights, epsilon, threshold, objective_tolerance):
     """
     Generate a context specific model by adding iMAT constraints, and ensuring iMAT objective value is near optimal.
 
@@ -131,7 +131,7 @@ def _imat_restrictions(model, rxn_weights, epsilon, threshold, objective_toleran
     return imat_model
 
 
-def _simple_bounds(model, rxn_weights, epsilon, threshold):
+def simple_bounds_model(model, rxn_weights, epsilon, threshold):
     """
     Generate a context specific model by setting bounds on reactions based on iMAT solution.
 
@@ -177,7 +177,7 @@ def _simple_bounds(model, rxn_weights, epsilon, threshold):
     return updated_model
 
 
-def _subset(model, rxn_weights, epsilon, threshold):
+def subset_model(model, rxn_weights, epsilon, threshold):
     """
     Generate a context specific model by knocking out reactions found to be inactive by iMAT.
 
@@ -210,7 +210,7 @@ def _subset(model, rxn_weights, epsilon, threshold):
     return updated_model
 
 
-def _fva(model, rxn_weights, epsilon, threshold, objective_tolerance):
+def fva_model(model, rxn_weights, epsilon, threshold, objective_tolerance):
     """
     Generate a context specific model by setting bounds on reactions based on FVA for an iMAT model.
 
@@ -249,7 +249,7 @@ def _fva(model, rxn_weights, epsilon, threshold, objective_tolerance):
     return updated_model
 
 
-def _milp(model, rxn_weights, epsilon, threshold):
+def milp_model(model, rxn_weights, epsilon, threshold):
     """
     Generate a context specific model by setting bounds on reactions based on a set of mixed integer linear programming
     problems.
@@ -323,9 +323,11 @@ def _parse_method(method: str) -> str:
     """
     if method.lower() in ["simple", "simple_bounds", "simple bounds", "simple-bounds", "sb"]:
         return "simple_bounds"
-    elif method.lower() in ["imat", "imat_restrictions", "imat restrictions", "imat-restrictions", "ir"]:
-        return "imat_restrictions"
-    elif method.lower() in ["subset", "subset_ko", "subset-ko", "eliminate_below_threshold", "eliminate-below-threshold"]:
+    elif method.lower() in ["imat", "imat_restrictions", "imat restrictions", "imat-restrictions", "ir",
+                            "imat_constraints", "imat constraints", "imat-constraints", "ic"]:
+        return "imat_constraint"
+    elif method.lower() in ["subset", "subset_ko", "subset-ko", "eliminate_below_threshold",
+                            "eliminate-below-threshold"]:
         return "subset"
     elif method.lower() in ["fva", "flux_variability_analysis", "flux variability analysis",
                             "flux-variability-analysis", "f"]:
