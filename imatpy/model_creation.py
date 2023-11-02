@@ -1,14 +1,6 @@
 """
 Submodule with functions for creating a context specific model using iMAT
 """
-
-# Potential methods:
-# - imat_restrictions
-# - simple_bounds
-# - eliminate_below_threshold
-# - fva
-# - MILP
-
 # Standard Library Imports
 from typing import Union
 
@@ -72,8 +64,8 @@ def generate_model(model: cobra.Model,
         return _imat_restrictions(model, rxn_weights, epsilon, threshold, objective_tolerance)
     elif method == "simple_bounds":
         return _simple_bounds(model, rxn_weights, epsilon, threshold)
-    elif method == "eliminate_below_threshold":
-        return _eliminate_below_threshold(model, rxn_weights, epsilon, threshold)
+    elif method == "subset":
+        return _subset(model, rxn_weights, epsilon, threshold)
     elif method == "fva":
         return _fva(model, rxn_weights, epsilon, threshold, objective_tolerance)
     elif method == "milp":
@@ -185,7 +177,7 @@ def _simple_bounds(model, rxn_weights, epsilon, threshold):
     return updated_model
 
 
-def _eliminate_below_threshold(model, rxn_weights, epsilon, threshold):
+def _subset(model, rxn_weights, epsilon, threshold):
     """
     Generate a context specific model by knocking out reactions found to be inactive by iMAT.
 
@@ -214,7 +206,7 @@ def _eliminate_below_threshold(model, rxn_weights, epsilon, threshold):
     inactive_reactions = fluxes[(fluxes.abs() <= threshold) & (fluxes.index.isin(rl))]
     for rxn in inactive_reactions.index:
         reaction = updated_model.reactions.get_by_id(rxn)
-        reaction.bounds = (0, 0)  # KO the reaction
+        reaction.bounds = (-threshold, threshold)  # Force reaction to be below threshold
     return updated_model
 
 
@@ -317,7 +309,7 @@ def _milp(model, rxn_weights, epsilon, threshold):
     return updated_model
 
 
-# endregion: Model Creation methods
+# endregion Model Creation methods
 
 # region Helper Functions
 def _parse_method(method: str) -> str:
@@ -333,9 +325,8 @@ def _parse_method(method: str) -> str:
         return "simple_bounds"
     elif method.lower() in ["imat", "imat_restrictions", "imat restrictions", "imat-restrictions", "ir"]:
         return "imat_restrictions"
-    elif method.lower() in ["eliminate", "eliminate_below_threshold", "eliminate below threshold",
-                            "eliminate-below-threshold", "ebt"]:
-        return "eliminate_below_threshold"
+    elif method.lower() in ["subset", "subset_ko", "subset-ko", "eliminate_below_threshold", "eliminate-below-threshold"]:
+        return "subset"
     elif method.lower() in ["fva", "flux_variability_analysis", "flux variability analysis",
                             "flux-variability-analysis", "f"]:
         return "fva"
