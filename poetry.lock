@@ -3324,5 +3324,5 @@ gurobipy = ["gurobipy"]
 
 [metadata]
 lock-version = "2.0"
-python-versions = ">=3.9,<3.11"
-content-hash = "0e8d1b72861205237a45fa8653899506cd33f7fdbee33071fafe7f90f814e141"
+python-versions = ">3.9,<3.11"
+content-hash = "e9886006bebf209cbe13bad8456b8dbe130f0eed7348831b944f98bbf47dddc5"
