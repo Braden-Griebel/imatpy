@@ -94,6 +94,36 @@ def flux_to_binary(fluxes: pd.Series, which_reactions: str = "active", epsilon: 
         raise ValueError("Couldn't Parse which_reactions, should be one of: active, inactive, forward, reverse")
 
 
+def compute_imat_objective(fluxes: pd.Series, rxn_weights, epsilon: float = DEFAULTS["epsilon"],
+                           threshold: float = DEFAULTS["threshold"]):
+    """
+    Compute the iMAT objective value for a given set of fluxes.
+
+    :param fluxes: A pandas series of fluxes.
+    :type fluxes: pandas.Series
+    :param rxn_weights: A dictionary or pandas series of reaction weights.
+    :type rxn_weights: dict | pandas.Series
+    :param epsilon: The epsilon value to use for iMAT (default: 1e-3). Represents the minimum flux for a reaction to
+        be considered on.
+    :type epsilon: float
+    :param threshold: The threshold value to use for iMAT (default: 1e-4). Represents the maximum flux for a reaction
+        to be considered off.
+    :type threshold: float
+    :return: The iMAT objective value.
+    """
+    if isinstance(rxn_weights, dict):
+        rxn_weights = pd.Series(rxn_weights)
+    rh = rxn_weights[rxn_weights > 0]
+    rl = rxn_weights[rxn_weights < 0]
+    # Get the fluxes greater than epsilon which are highly expressed
+    rh_pos = fluxes[rh.index].ge(epsilon).sum()
+    # Get the fluxes less than -epsilon which are highly expressed
+    rh_neg = fluxes[rh.index].le(-epsilon).sum()
+    # Get the fluxes whose absolute value is less than threshold which are lowly expressed
+    rl_pos = fluxes[rl.index].abs().le(threshold).sum()
+    return rh_pos + rh_neg + rl_pos
+
+
 # endregion: iMAT extension functions
 
 # region: iMAT Helper Functions

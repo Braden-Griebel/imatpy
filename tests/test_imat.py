@@ -96,7 +96,8 @@ class TestAddImatConstraints(unittest.TestCase):
     def test_add_imat_constraints_not_inplace(self):
         test_model = self.model.copy()
         copy_model = test_model.copy()
-        updated_model = imatpy.imat.add_imat_constraints(model=test_model, rxn_weights=self.rxn_weights, epsilon=self.epsilon,
+        updated_model = imatpy.imat.add_imat_constraints(model=test_model, rxn_weights=self.rxn_weights,
+                                                         epsilon=self.epsilon,
                                                          threshold=self.threshold)
         # Check that the model was not modified in place
         self.assertTrue(model_eq(test_model, copy_model))
@@ -173,9 +174,11 @@ class TestImat(unittest.TestCase):
         # Check that the model was not modified
         self.assertTrue(model_eq(test_model, copy_model))
         # Get the binary solution
-        bin_sol_active = imatpy.imat.flux_to_binary(fluxes=imat_res.fluxes, which_reactions="active", epsilon=self.epsilon,
+        bin_sol_active = imatpy.imat.flux_to_binary(fluxes=imat_res.fluxes, which_reactions="active",
+                                                    epsilon=self.epsilon,
                                                     threshold=self.threshold)
-        bin_sol_inactive = imatpy.imat.flux_to_binary(fluxes=imat_res.fluxes, which_reactions="inactive", epsilon=self.epsilon,
+        bin_sol_inactive = imatpy.imat.flux_to_binary(fluxes=imat_res.fluxes, which_reactions="inactive",
+                                                      epsilon=self.epsilon,
                                                       threshold=self.threshold)
         # Check that the binary solution is correct
         # Check that r_A_B_D_E is active
@@ -202,6 +205,30 @@ class TestImat(unittest.TestCase):
         test_model = self.model.copy()
         test_model.solver = "glpk"
         self.imat_helper(test_model)
+
+
+class TestImatExtensionFunctions(unittest.TestCase):
+    model = None
+    data_path = None
+    rxn_weights = None
+    epsilon = None
+    threshold = None
+
+    @classmethod
+    def setUpClass(cls):
+        setup(cls)
+
+    def test_compute_imat_objective(self):
+        test_model = self.model.copy()
+        # Solve imat problem
+        imat_sol = imatpy.imat.imat(model=test_model, rxn_weights=self.rxn_weights, epsilon=self.epsilon,
+                                    threshold=self.threshold)
+        imat_objective = imat_sol.objective_value
+        # Compute objective using extension function
+        computed_objective = imatpy.imat.compute_imat_objective(fluxes=imat_sol.fluxes, rxn_weights=self.rxn_weights,
+                                                                epsilon=self.epsilon, threshold=self.threshold)
+        # Check that the objectives are equal
+        self.assertEqual(imat_objective, computed_objective)
 
 
 if __name__ == '__main__':
