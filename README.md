@@ -4,7 +4,7 @@
 
 [![Documentation
 Status](https://readthedocs.org/projects/imatpy/badge/?version=latest.png)](https://imatpy.readthedocs.io/en/latest/?badge=latest)  
-![Tests](https://github.com/bgriebel/imatpy/actions/workflows/tests.yml/badge.svg)
+![Tests](https://github.com/Braden-Griebel/imatpy/actions/workflows/tests.yml/badge.svg)
 
 ## About
 
