@@ -5,6 +5,14 @@ Installation
 ************
 
 iMATpy can be installed with pip: ``pip install imatpy``
+  
+iMATpy requires an optimizer to be installed. The default optimizer is ``glpk`` which is installed by ``COBRApy``. This package can also be used with Gurobi_ or CPLEX_ 
+which must be installed seperately. Both ``cplex`` and ``gurobi`` have free academic licenses. Once installed, the optimizer can be changed by setting the solver property 
+of a model, and the default can be changed via ``COBRApy`` config, by changing the ``solver`` property of the ``cobra.core.configuration.Configuration()`` object (see `cobrapy documentation`_). 
+
+.. _Gurobi: https://www.gurobi.com/
+.. _CPLEX: https://www.ibm.com/products/ilog-cplex-optimization-studio/cplex-optimizer
+.. _cobrapy documentation: https://cobrapy.readthedocs.io/en/latest/
 
 Package Structure
 *****************
@@ -23,4 +31,4 @@ The package is divided into four main submodules, ``imat``, ``model_creation``, 
 
 Examples
 ********
-TODO
+.. 
