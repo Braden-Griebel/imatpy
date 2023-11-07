@@ -336,7 +336,7 @@ several libraries which are listed below:
 
 In addition, these libraries were used during developement:  
 - black: Used for autoformating  
-- jupyter: Used for rendering quarto documents - pylint: Used for
+- jupyter: Used for rendering quarto documents - flake8: Used for
 linting - pytest: Used for running unittests  
 - Sphinx: Used for generating documentation  
 - sphinx-rtd-theme: Used for formating the documentation

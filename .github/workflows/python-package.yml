@@ -10,8 +10,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-
+  lint_test:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -42,7 +41,7 @@ jobs:
         key: pydeps-${{ hashFiles('**/poetry/lock') }}
     - run: poetry install --no-interaction --no-root
       if: steps.cache-deps.outputs.cache-hit != 'true'
-    - run: poetry install --no-ineraction --with dev
+    - run: poetry install --no-interaction --with dev --extras "gurobipy cplex"
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
@@ -51,4 +50,4 @@ jobs:
         poetry run flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        poetry run pytest
+        poetry run pytest -W ignore::DeprecationWarning

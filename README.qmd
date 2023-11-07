@@ -246,7 +246,7 @@ This package itself is relased under an MIT license. It makes use of several lib
 In addition, these libraries were used during developement:      
     - black: Used for autoformating  
     - jupyter: Used for rendering quarto documents
-    - pylint: Used for linting
+    - flake8: Used for linting
     - pytest: Used for running unittests  
     - Sphinx: Used for generating documentation  
     - sphinx-rtd-theme: Used for formating the documentation  

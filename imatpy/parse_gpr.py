@@ -4,17 +4,18 @@ from typing import Any
 
 # External Imports
 import cobra
-import numpy as np
 import pandas as pd
-from numpy import ndarray, dtype
-from pandas import Series
 
 
 def gene_to_rxn_weights(
-    model: cobra.Model, gene_weights: pd.Series, fn_dict: dict = None, fill_val: Any = 0
+    model: cobra.Model,
+    gene_weights: pd.Series,
+    fn_dict: dict = None,
+    fill_val: Any = 0,
 ) -> pd.Series:
     """
-    Convert a gene weights series to a reaction weights series using the provided function dictionary.
+    Convert a gene weights series to a reaction weights series using the
+    provided function dictionary.
 
     :param model: cobra.Model: A cobra model
     :type model: cobra.Model
@@ -35,9 +36,12 @@ def gene_to_rxn_weights(
     return rxn_weights
 
 
-def eval_gpr(gpr: str, gene_weights: pd.Series, fn_dict: dict = None) -> Any | None:
+def eval_gpr(
+    gpr: str, gene_weights: pd.Series, fn_dict: dict = None
+) -> Any | None:
     """
-    Evaluate a single GPR string using the provided gene weights and function dictionary.
+    Evaluate a single GPR string using the provided gene weights and
+    function dictionary.
 
     :param gpr: str: A single GPR string
     :type gpr: str
@@ -69,11 +73,13 @@ def eval_gpr(gpr: str, gene_weights: pd.Series, fn_dict: dict = None) -> Any | N
 
 def str_to_list(in_string: str, replacements: dict = None) -> list[str]:
     """
-    Convert a string to a list of strings, splitting on whitespace and parentheses.
+    Convert a string to a list of strings, splitting on whitespace and
+    parentheses.
 
     :param in_string: str: Specify the input string
     :type in_string: str
-    :param replacements: dict: Replace certain strings with other strings before splitting, uses regex
+    :param replacements: dict: Replace certain strings with other strings
+        before splitting, uses regex
     :type replacements: dict
     :return: A list of strings
     :rtype: list[str]
@@ -93,8 +99,9 @@ def str_to_list(in_string: str, replacements: dict = None) -> list[str]:
 
 def process_token(token, postfix, operator_stack, precedence):
     """
-    The process_token function takes in a token, the postfix list, the operator stack and precedence dictionary.
-    It performs the shunting yard algorithm for a the single provided token.
+    The process_token function takes in a token, the postfix list, the
+    operator stack and precedence dictionary. It performs the shunting
+    yard algorithm for a the single provided token.
 
     :param token: Current token
     :type token: str
@@ -111,8 +118,8 @@ def process_token(token, postfix, operator_stack, precedence):
     if (token not in precedence) and (token != "(") and (token != ")"):
         postfix.append(token)
         return
-    # If token is operator, move higher priority operators from stack to output, then add
-    # the operator itself to the postfix expression
+    # If token is operator, move higher priority operators from stack to
+    # output, then add the operator itself to the postfix expression
     if token in precedence:
         while (
             (len(operator_stack) > 0)
@@ -127,7 +134,8 @@ def process_token(token, postfix, operator_stack, precedence):
     if token == "(":
         operator_stack.append(token)
         return
-    # For right parenthesis pop operator stack until reach matching left parenthesis
+    # For right parenthesis pop operator stack until reach
+    # matching left parenthesis
     if token == ")":
         if len(operator_stack) == 0:  # Check for mismatch in parentheses
             raise ValueError("Mismatched Parenthesis in Expression")

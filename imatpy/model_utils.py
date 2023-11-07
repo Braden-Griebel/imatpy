@@ -1,14 +1,11 @@
 """
 Module for model utilities
 """
-
-# Standard Library Imports
-import pathlib
-
 # External Imports
 import cobra
 import optlang.container
 from sympy import parse_expr
+
 
 # region Model IO
 def read_model(model_path, file_type=None):
@@ -123,10 +120,14 @@ def _parse_file_type(file_type):
     else:
         raise ValueError("File type not supported")
 
+
 # endregion: Model IO
 
+
 # region Model Comparison
-def model_eq(model1: cobra.Model, model2: cobra.Model, verbose: bool = False) -> bool:
+def model_eq(
+    model1: cobra.Model, model2: cobra.Model, verbose: bool = False
+) -> bool:
     """
     Check if two cobra models are equal.
 
@@ -160,30 +161,33 @@ def model_eq(model1: cobra.Model, model2: cobra.Model, verbose: bool = False) ->
         if not _check_reaction_eq(reaction1, reaction2, verbose=verbose):
             return False
     # Check objective
-    if not _check_objective_eq(model1.objective, model2.objective, verbose=verbose):
+    if not _check_objective_eq(
+        model1.objective, model2.objective, verbose=verbose
+    ):
         if verbose:
             print("Models have different objectives")
             print(f"Model 1 objective: {model1.objective}")
             print(f"Model 2 objective: {model2.objective}")
         return False
     # Check the underlying constraint model
-    if not _check_optlang_container_eq(model1.solver.constraints, model2.solver.constraints):
+    if not _check_optlang_container_eq(
+        model1.solver.constraints, model2.solver.constraints
+    ):
         if verbose:
             print("Models have different constraints")
         return False
-    if not _check_optlang_container_eq(model1.solver.variables, model2.solver.variables):
+    if not _check_optlang_container_eq(
+        model1.solver.variables, model2.solver.variables
+    ):
         if verbose:
             print("Models have different variables")
         return False
-
 
     # Checking more specifics for the variables
     for var1 in model1.variables:
         var2 = model2.variables[var1.name]
         if not _check_variable_eq(var1, var2, verbose=verbose):
             return False
-
-
 
     # Checking more specifics for the constraints
     for const1 in model1.constraints:
@@ -193,7 +197,9 @@ def model_eq(model1: cobra.Model, model2: cobra.Model, verbose: bool = False) ->
     return True
 
 
-def _check_dictlist_subset(dictlist1: cobra.DictList, dictlist2: cobra.DictList) -> bool:
+def _check_dictlist_subset(
+    dictlist1: cobra.DictList, dictlist2: cobra.DictList
+) -> bool:
     """
     Check if dictlist1 is a subset of dictlist2.
 
@@ -210,7 +216,9 @@ def _check_dictlist_subset(dictlist1: cobra.DictList, dictlist2: cobra.DictList)
     return True
 
 
-def _check_dictlist_eq(dictlist1: cobra.DictList, dictlist2: cobra.DictList) -> bool:
+def _check_dictlist_eq(
+    dictlist1: cobra.DictList, dictlist2: cobra.DictList
+) -> bool:
     """
     Check if two dictlists are equal.
 
@@ -228,7 +236,9 @@ def _check_dictlist_eq(dictlist1: cobra.DictList, dictlist2: cobra.DictList) -> 
     return True
 
 
-def _check_optlang_container_subset(cont1: optlang.container.Container, cont2: optlang.container.Container) -> bool:
+def _check_optlang_container_subset(
+    cont1: optlang.container.Container, cont2: optlang.container.Container
+) -> bool:
     """
     Check if cont1 is a subset of cont2.
 
@@ -245,7 +255,9 @@ def _check_optlang_container_subset(cont1: optlang.container.Container, cont2: o
     return True
 
 
-def _check_optlang_container_eq(cont1: optlang.container.Container, cont2: optlang.container.Container) -> bool:
+def _check_optlang_container_eq(
+    cont1: optlang.container.Container, cont2: optlang.container.Container
+) -> bool:
     """
     Check if two optlang containers are equal.
 
@@ -263,7 +275,9 @@ def _check_optlang_container_eq(cont1: optlang.container.Container, cont2: optla
     return True
 
 
-def _check_reaction_eq(rxn1: cobra.Reaction, rxn2: cobra.Reaction, verbose: bool = False) -> bool:
+def _check_reaction_eq(
+    rxn1: cobra.Reaction, rxn2: cobra.Reaction, verbose: bool = False
+) -> bool:
     """
     Check if two reactions are equal.
 
@@ -271,7 +285,8 @@ def _check_reaction_eq(rxn1: cobra.Reaction, rxn2: cobra.Reaction, verbose: bool
     :type rxn1: cobra.Reaction
     :param rxn2: The second reaction to compare.
     :type rxn2: cobra.Reaction
-    :param verbose: Whether to print where the reactions differ (default: False).
+    :param verbose: Whether to print where the reactions differ
+    (default: False).
     :type verbose: bool
     :return: True if the reactions are equal, False otherwise.
     :rtype: bool
@@ -311,7 +326,8 @@ def _check_expression_eq(expr1, expr2, verbose=False) -> bool:
     :type expr1: sympy.Expr or optlang.Expression
     :param expr2: The second expression to compare.
     :type expr2: sympy.Expr or optlang.Expression
-    :param verbose: Whether to print where the expressions differ (default: False).
+    :param verbose: Whether to print where the expressions differ
+        (default: False).
     :type verbose: bool
     :return: True if the expressions are equal, False otherwise.
     :rtype: bool
@@ -332,7 +348,8 @@ def _check_objective_eq(objective1, objective2, verbose=False) -> bool:
     :type objective1: cobra.core.objective.Objective
     :param objective2: The second objective to compare.
     :type objective2: cobra.core.objective.Objective
-    :param verbose: Whether to print where the objectives differ (default: False).
+    :param verbose: Whether to print where the objectives differ
+        (default: False).
     :type verbose: bool
     :return: True if the objectives are equal, False otherwise.
     :rtype: bool
@@ -366,7 +383,9 @@ def _check_variable_eq(var1, var2, verbose: bool = False) -> bool:
     return True
 
 
-def _check_constraint_eq(constraint1, constraint2, verbose: bool = False) -> bool:
+def _check_constraint_eq(
+    constraint1, constraint2, verbose: bool = False
+) -> bool:
     if constraint1.lb != constraint2.lb:
         if verbose:
             print(f"Constraint {constraint1.name} has different lower bounds")
@@ -375,9 +394,13 @@ def _check_constraint_eq(constraint1, constraint2, verbose: bool = False) -> boo
         if verbose:
             print(f"Constraint {constraint1.name} has different upper bounds")
         return False
-    if not _check_expression_eq(constraint1.expression, constraint2.expression, verbose=verbose):
+    if not _check_expression_eq(
+        constraint1.expression, constraint2.expression, verbose=verbose
+    ):
         if verbose:
             print(f"Constraint {constraint1.name} has different expressions")
         return False
     return True
+
+
 # endregion: Model Comparison

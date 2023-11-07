@@ -21,9 +21,13 @@ class TestParseFileType(unittest.TestCase):
         Configuration.solver = "glpk"  # Use GLPK solver for testing
 
     def test_parse_file_type(self):
-        self.assertEqual(imatpy.model_utils._parse_file_type("joblib"), "joblib")
+        self.assertEqual(
+            imatpy.model_utils._parse_file_type("joblib"), "joblib"
+        )
         self.assertEqual(imatpy.model_utils._parse_file_type("pkl"), "pickle")
-        self.assertEqual(imatpy.model_utils._parse_file_type("pickle"), "pickle")
+        self.assertEqual(
+            imatpy.model_utils._parse_file_type("pickle"), "pickle"
+        )
         self.assertEqual(imatpy.model_utils._parse_file_type("yml"), "yaml")
         self.assertEqual(imatpy.model_utils._parse_file_type("xml"), "sbml")
         self.assertEqual(imatpy.model_utils._parse_file_type("jsn"), "json")
@@ -43,10 +47,18 @@ class TestModelIO(unittest.TestCase):
 
     def test_read_model(self):
         data_path = str(pathlib.Path(__file__).parent.joinpath("data"))
-        model_json = imatpy.model_utils.read_model(os.path.join(data_path, "textbook_model.json"))
-        model_xml = imatpy.model_utils.read_model(os.path.join(data_path, "textbook_model.xml"))
-        model_mat = imatpy.model_utils.read_model(os.path.join(data_path, "textbook_model.mat"))
-        model_yaml = imatpy.model_utils.read_model(os.path.join(data_path, "textbook_model.yaml"))
+        model_json = imatpy.model_utils.read_model(
+            os.path.join(data_path, "textbook_model.json")
+        )
+        model_xml = imatpy.model_utils.read_model(
+            os.path.join(data_path, "textbook_model.xml")
+        )
+        model_mat = imatpy.model_utils.read_model(
+            os.path.join(data_path, "textbook_model.mat")
+        )
+        model_yaml = imatpy.model_utils.read_model(
+            os.path.join(data_path, "textbook_model.yaml")
+        )
         for rxn in model_json.reactions:
             self.assertTrue(rxn in model_xml.reactions)
             self.assertTrue(rxn in model_mat.reactions)
@@ -62,26 +74,50 @@ class TestModelIO(unittest.TestCase):
 
     def test_write_model(self):
         data_path = str(pathlib.Path(__file__).parent.joinpath("data"))
-        out_dir = str(pathlib.Path(__file__).parent.joinpath("data").joinpath("temp"))
+        out_dir = str(
+            pathlib.Path(__file__).parent.joinpath("data").joinpath("temp")
+        )
         try:
             os.mkdir(out_dir)
-            model = imatpy.model_utils.read_model(os.path.join(data_path, "textbook_model.json"))
-            imatpy.model_utils.write_model(model, os.path.join(out_dir, "textbook_model.json"))
-            imatpy.model_utils.write_model(model, os.path.join(out_dir, "textbook_model.xml"))
-            imatpy.model_utils.write_model(model, os.path.join(out_dir, "textbook_model.yaml"))
-            imatpy.model_utils.write_model(model, os.path.join(out_dir, "textbook_model.mat"))
+            model = imatpy.model_utils.read_model(
+                os.path.join(data_path, "textbook_model.json")
+            )
+            imatpy.model_utils.write_model(
+                model, os.path.join(out_dir, "textbook_model.json")
+            )
+            imatpy.model_utils.write_model(
+                model, os.path.join(out_dir, "textbook_model.xml")
+            )
+            imatpy.model_utils.write_model(
+                model, os.path.join(out_dir, "textbook_model.yaml")
+            )
+            imatpy.model_utils.write_model(
+                model, os.path.join(out_dir, "textbook_model.mat")
+            )
             self.assertTrue(
                 os.path.exists(os.path.join(out_dir, "textbook_model.json"))
             )
-            self.assertTrue(os.path.exists(os.path.join(out_dir, "textbook_model.xml")))
+            self.assertTrue(
+                os.path.exists(os.path.join(out_dir, "textbook_model.xml"))
+            )
             self.assertTrue(
                 os.path.exists(os.path.join(out_dir, "textbook_model.yaml"))
             )
-            self.assertTrue(os.path.exists(os.path.join(out_dir, "textbook_model.mat")))
-            model_json = imatpy.model_utils.read_model(os.path.join(out_dir, "textbook_model.json"))
-            model_mat = imatpy.model_utils.read_model(os.path.join(out_dir, "textbook_model.mat"))
-            model_xml = imatpy.model_utils.read_model(os.path.join(out_dir, "textbook_model.xml"))
-            model_yaml = imatpy.model_utils.read_model(os.path.join(out_dir, "textbook_model.yaml"))
+            self.assertTrue(
+                os.path.exists(os.path.join(out_dir, "textbook_model.mat"))
+            )
+            model_json = imatpy.model_utils.read_model(
+                os.path.join(out_dir, "textbook_model.json")
+            )
+            model_mat = imatpy.model_utils.read_model(
+                os.path.join(out_dir, "textbook_model.mat")
+            )
+            model_xml = imatpy.model_utils.read_model(
+                os.path.join(out_dir, "textbook_model.xml")
+            )
+            model_yaml = imatpy.model_utils.read_model(
+                os.path.join(out_dir, "textbook_model.yaml")
+            )
             for rxn in model_json.reactions:
                 self.assertTrue(rxn in model_xml.reactions)
                 self.assertTrue(rxn in model_mat.reactions)
@@ -96,11 +132,15 @@ class TestModelIO(unittest.TestCase):
                 self.assertTrue(gene in model_yaml.genes)
         finally:
             if os.path.exists(out_dir):
-                if os.path.exists(os.path.join(out_dir, "textbook_model.json")):
+                if os.path.exists(
+                    os.path.join(out_dir, "textbook_model.json")
+                ):
                     os.remove(os.path.join(out_dir, "textbook_model.json"))
                 if os.path.exists(os.path.join(out_dir, "textbook_model.xml")):
                     os.remove(os.path.join(out_dir, "textbook_model.xml"))
-                if os.path.exists(os.path.join(out_dir, "textbook_model.yaml")):
+                if os.path.exists(
+                    os.path.join(out_dir, "textbook_model.yaml")
+                ):
                     os.remove(os.path.join(out_dir, "textbook_model.yaml"))
                 if os.path.exists(os.path.join(out_dir, "textbook_model.mat")):
                     os.remove(os.path.join(out_dir, "textbook_model.mat"))
@@ -114,8 +154,8 @@ class TestModelEquality(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         Configuration().solver = "glpk"
-        cls.data_path = str(pathlib.Path(__file__).parent / 'data')
-        cls.model_path = os.path.join(cls.data_path, 'test_model.json')
+        cls.data_path = str(pathlib.Path(__file__).parent / "data")
+        cls.model_path = os.path.join(cls.data_path, "test_model.json")
         cls.model = imatpy.model_utils.read_model(cls.model_path)
 
     def test_identical_models(self):
@@ -124,14 +164,21 @@ class TestModelEquality(unittest.TestCase):
     def test_model_copy(self):
         model_copy = self.model.copy()
         self.assertTrue(imatpy.model_utils.model_eq(self.model, model_copy))
-        self.assertTrue(imatpy.model_utils.model_eq(model_copy, self.model))  # Should be order independent
+        self.assertTrue(
+            imatpy.model_utils.model_eq(model_copy, self.model)
+        )  # Should be order independent
 
     def test_adding_metabolite(self):
         model1 = self.model.copy()
         model2 = self.model.copy()
         # Initial equality check
         self.assertTrue(imatpy.model_utils.model_eq(model1, model2))
-        test_met = Metabolite("test_met", formula="C1H2O3", name="Test Metabolite", compartment="c")
+        test_met = Metabolite(
+            "test_met",
+            formula="C1H2O3",
+            name="Test Metabolite",
+            compartment="c",
+        )
         model1.add_metabolites(test_met)
         self.assertFalse(imatpy.model_utils.model_eq(model1, model2))
         self.assertFalse(imatpy.model_utils.model_eq(model2, model1))
@@ -164,14 +211,18 @@ class TestModelEquality(unittest.TestCase):
     def test_changes_reaction_bounds(self):
         model1 = self.model.copy()
         model2 = self.model.copy()
-        model1.reactions.get_by_id('r_A_B_D_E').bounds = (-3.14, 3.14)
+        model1.reactions.get_by_id("r_A_B_D_E").bounds = (-3.14, 3.14)
         self.assertFalse(imatpy.model_utils.model_eq(model1, model2))
-        self.assertFalse(imatpy.model_utils.model_eq(model2, model1))  # Order independent
+        self.assertFalse(
+            imatpy.model_utils.model_eq(model2, model1)
+        )  # Order independent
 
     def test_gpr_change(self):
         model1 = self.model.copy()
         model2 = self.model.copy()
-        model1.reactions.get_by_id('r_A_B_D_E').gene_reaction_rule = 'g_A_B_D_E or g_C_E_F'
+        model1.reactions.get_by_id(
+            "r_A_B_D_E"
+        ).gene_reaction_rule = "g_A_B_D_E or g_C_E_F"
         self.assertFalse(imatpy.model_utils.model_eq(model1, model2))
         self.assertFalse(imatpy.model_utils.model_eq(model2, model1))
 
@@ -180,10 +231,14 @@ class TestModelEquality(unittest.TestCase):
         model2 = self.model.copy()
         # Initial equality check
         self.assertTrue(imatpy.model_utils.model_eq(model1, model2))
-        var = model1.solver.interface.Variable('test_var')
+        var = model1.solver.interface.Variable("test_var")
         model1.solver.add(var)
-        self.assertFalse(imatpy.model_utils.model_eq(model1, model2))  # Should detect added variable
-        self.assertFalse(imatpy.model_utils.model_eq(model2, model1))  # Should be order independent
+        self.assertFalse(
+            imatpy.model_utils.model_eq(model1, model2)
+        )  # Should detect added variable
+        self.assertFalse(
+            imatpy.model_utils.model_eq(model2, model1)
+        )  # Should be order independent
 
     def test_adding_constraint(self):
         model1 = self.model.copy()
@@ -192,7 +247,9 @@ class TestModelEquality(unittest.TestCase):
         self.assertTrue(imatpy.model_utils.model_eq(model1, model2))
         var1 = model1.solver.variables["r_A_B_D_E"]
         var2 = model1.solver.variables["r_C_E_F"]
-        test_const = model1.solver.interface.Constraint(var1 + var2, lb=-5, ub=5)
+        test_const = model1.solver.interface.Constraint(
+            var1 + var2, lb=-5, ub=5
+        )
         model1.solver.add(test_const)
         self.assertFalse(imatpy.model_utils.model_eq(model1, model2))
         self.assertFalse(imatpy.model_utils.model_eq(model2, model1))
