@@ -2,13 +2,9 @@
 
 <img src="./imatpy_logo.png" height="60" alt="logo" />
 
-<div>
-
-[![](https://readthedocs.org/projects/imatpy/badge/?version=latest.png)](https://imatpy.readthedocs.io/en/latest/?badge=latest)
-
-Documentation Status
-
-</div>
+[![Documentation
+Status](https://readthedocs.org/projects/imatpy/badge/?version=latest.png)](https://imatpy.readthedocs.io/en/latest/?badge=latest)  
+![Tests](https://github.com/bgriebel/imatpy/actions/workflows/tests.yml/badge.svg)
 
 ## About
 
