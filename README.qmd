@@ -12,7 +12,9 @@ Configuration().solver = "glpk"
 
 ```
 
-![logo](./imatpy_logo.png){height=60}
+![logo](./imatpy_logo.png){height=60}  
+
+[![Documentation Status](https://readthedocs.org/projects/imatpy/badge/?version=latest)](https://imatpy.readthedocs.io/en/latest/?badge=latest)
 
 ## About
 

@@ -2,6 +2,14 @@
 
 <img src="./imatpy_logo.png" height="60" alt="logo" />
 
+<div>
+
+[![](https://readthedocs.org/projects/imatpy/badge/?version=latest.png)](https://imatpy.readthedocs.io/en/latest/?badge=latest)
+
+Documentation Status
+
+</div>
+
 ## About
 
 iMATpy is a python package implementing the iMAT algorithm for
