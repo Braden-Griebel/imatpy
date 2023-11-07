@@ -4,7 +4,7 @@
 
 [![Documentation
 Status](https://readthedocs.org/projects/imatpy/badge/?version=latest.png)](https://imatpy.readthedocs.io/en/latest/?badge=latest)  
-![Tests](https://github.com/Braden-Griebel/imatpy/actions/workflows/tests.yml/badge.svg)
+[![Tests](https://github.com/Braden-Griebel/imatpy/actions/workflows/tests.yml/badge.svg)](https://github.com/Braden-Griebel/imatpy/actions/workflows/tests.yml/badge.svg)
 
 ## About
 
@@ -36,8 +36,9 @@ In order to solve the optimization problems associated with iMAT, a
 LP/MILP solver is required. By default this package uses the
 [GLPK](https://www.gnu.org/software/glpk/) solver which is installed
 automatically by COBRApy, but [Gurobi](https://www.gurobi.com/) and
-[CPLEX](https://www.ibm.com/products/ilog-cplex-optimization-studio/cplex-optimizer).
-Both Gurobi and CPLEX have free academic licenses available.
+[CPLEX](https://www.ibm.com/products/ilog-cplex-optimization-studio/cplex-optimizer)
+can also be used. Both Gurobi and CPLEX have free academic licenses
+available.
 
 ## Workflow
 
