@@ -44,7 +44,9 @@ jobs:
     - run: poetry install --no-interaction --with dev --extras "gurobipy cplex"
     - name: Lint with flake8
       run: |
-        poetry run flake8
+        pwd
+        ls 
+        poetry run flake8 ./imatpy
     - name: Test with pytest
       run: |
         poetry run pytest -W ignore::DeprecationWarning
