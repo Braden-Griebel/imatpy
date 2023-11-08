@@ -3,7 +3,7 @@
 <img src="./imatpy_logo.png" height="60" alt="logo" />
 
 [![Documentation
-Status](https://readthedocs.org/projects/imatpy/badge/?version=latest.png)](https://imatpy.readthedocs.io/en/latest/?badge=latest)  
+Status](https://readthedocs.org/projects/imatpy/badge/?version=latest)](https://imatpy.readthedocs.io/en/latest/?badge=latest)  
 [![Tests](https://github.com/Braden-Griebel/imatpy/actions/workflows/tests.yml/badge.svg)](https://github.com/Braden-Griebel/imatpy/actions/workflows/tests.yml/badge.svg)
 
 ## About
