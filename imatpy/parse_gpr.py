@@ -56,8 +56,8 @@ def eval_gpr(
         return None
     if fn_dict is None:
         fn_dict = {"AND": min, "OR": max}
-    gpr_expr = str_to_list(gpr)
-    gpr_expr = to_postfix(gpr_expr)
+    gpr_expr = _str_to_list(gpr)
+    gpr_expr = _to_postfix(gpr_expr)
     eval_stack = []
     for token in gpr_expr:
         if token not in fn_dict:
@@ -71,7 +71,7 @@ def eval_gpr(
     return eval_stack.pop()
 
 
-def str_to_list(in_string: str, replacements: dict = None) -> list[str]:
+def _str_to_list(in_string: str, replacements: dict = None) -> list[str]:
     """
     Convert a string to a list of strings, splitting on whitespace and
     parentheses.
@@ -97,7 +97,7 @@ def str_to_list(in_string: str, replacements: dict = None) -> list[str]:
     return in_string.split()
 
 
-def process_token(token, postfix, operator_stack, precedence):
+def _process_token(token, postfix, operator_stack, precedence):
     """
     The process_token function takes in a token, the postfix list, the
     operator stack and precedence dictionary. It performs the shunting
@@ -150,7 +150,7 @@ def process_token(token, postfix, operator_stack, precedence):
         return
 
 
-def to_postfix(infix: list[str], precedence: dict = None) -> list[str]:
+def _to_postfix(infix: list[str], precedence: dict = None) -> list[str]:
     """
     Convert an infix expression to postfix notation.
     :param infix: list[str]: A list of strings representing an infix expression
@@ -167,7 +167,7 @@ def to_postfix(infix: list[str], precedence: dict = None) -> list[str]:
     operator_stack = []
     # For each token, use shunting yard algorithm to process it
     for token in infix:
-        process_token(token, postfix, operator_stack, precedence)
+        _process_token(token, postfix, operator_stack, precedence)
     # Empty the operator stack
     while len(operator_stack) > 0:
         op = operator_stack.pop()

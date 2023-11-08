@@ -10,8 +10,8 @@ import pandas as pd
 
 # Local Imports
 from imatpy.parse_gpr import (
-    str_to_list,
-    to_postfix,
+    _str_to_list,
+    _to_postfix,
     eval_gpr,
     gene_to_rxn_weights,
 )
@@ -20,82 +20,82 @@ from imatpy.model_utils import read_model
 
 class TestStrToList(unittest.TestCase):
     def test_token_parse(self):
-        self.assertEqual(str_to_list("Rv0031"), ["Rv0031"])
-        self.assertEqual(str_to_list(""), [])
+        self.assertEqual(_str_to_list("Rv0031"), ["Rv0031"])
+        self.assertEqual(_str_to_list(""), [])
 
     def test_parenthesis_parse(self):
-        self.assertEqual(str_to_list("(Rv0031)"), ["(", "Rv0031", ")"])
-        self.assertEqual(str_to_list("(Rv0031"), ["(", "Rv0031"])
-        self.assertEqual(str_to_list("Rv0031)"), ["Rv0031", ")"])
+        self.assertEqual(_str_to_list("(Rv0031)"), ["(", "Rv0031", ")"])
+        self.assertEqual(_str_to_list("(Rv0031"), ["(", "Rv0031"])
+        self.assertEqual(_str_to_list("Rv0031)"), ["Rv0031", ")"])
         self.assertEqual(
-            str_to_list("(Rv0031)AND"), ["(", "Rv0031", ")", "AND"]
+            _str_to_list("(Rv0031)AND"), ["(", "Rv0031", ")", "AND"]
         )
 
     def test_operator_replacements(self):
         self.assertEqual(
-            str_to_list("Rv0031 and Rv0098"), ["Rv0031", "AND", "Rv0098"]
+            _str_to_list("Rv0031 and Rv0098"), ["Rv0031", "AND", "Rv0098"]
         )
         self.assertEqual(
-            str_to_list("Rv0031 anD Rv0098"), ["Rv0031", "AND", "Rv0098"]
+            _str_to_list("Rv0031 anD Rv0098"), ["Rv0031", "AND", "Rv0098"]
         )
         self.assertEqual(
-            str_to_list("Rv0031 And Rv0098"), ["Rv0031", "AND", "Rv0098"]
+            _str_to_list("Rv0031 And Rv0098"), ["Rv0031", "AND", "Rv0098"]
         )
         self.assertEqual(
-            str_to_list("Rv0031 or Rv0098"), ["Rv0031", "OR", "Rv0098"]
+            _str_to_list("Rv0031 or Rv0098"), ["Rv0031", "OR", "Rv0098"]
         )
         self.assertEqual(
-            str_to_list("Rv0031 | Rv0098"), ["Rv0031", "OR", "Rv0098"]
+            _str_to_list("Rv0031 | Rv0098"), ["Rv0031", "OR", "Rv0098"]
         )
         self.assertEqual(
-            str_to_list("Rv0031 || Rv0098"), ["Rv0031", "OR", "Rv0098"]
+            _str_to_list("Rv0031 || Rv0098"), ["Rv0031", "OR", "Rv0098"]
         )
         self.assertEqual(
-            str_to_list("Rv0031|Rv0098"), ["Rv0031", "OR", "Rv0098"]
+            _str_to_list("Rv0031|Rv0098"), ["Rv0031", "OR", "Rv0098"]
         )
         self.assertEqual(
-            str_to_list("Rv0031||Rv0098"), ["Rv0031", "OR", "Rv0098"]
+            _str_to_list("Rv0031||Rv0098"), ["Rv0031", "OR", "Rv0098"]
         )
         self.assertEqual(
-            str_to_list("Rv0031 & Rv0098"), ["Rv0031", "AND", "Rv0098"]
+            _str_to_list("Rv0031 & Rv0098"), ["Rv0031", "AND", "Rv0098"]
         )
         self.assertEqual(
-            str_to_list("Rv0031 && Rv0098"), ["Rv0031", "AND", "Rv0098"]
+            _str_to_list("Rv0031 && Rv0098"), ["Rv0031", "AND", "Rv0098"]
         )
         self.assertEqual(
-            str_to_list("Rv0031&Rv0098"), ["Rv0031", "AND", "Rv0098"]
+            _str_to_list("Rv0031&Rv0098"), ["Rv0031", "AND", "Rv0098"]
         )
         self.assertEqual(
-            str_to_list("Rv0031&&Rv0098"), ["Rv0031", "AND", "Rv0098"]
+            _str_to_list("Rv0031&&Rv0098"), ["Rv0031", "AND", "Rv0098"]
         )
 
     def test_replacement_dict(self):
         self.assertEqual(
-            str_to_list("Rv0031 n Rv0098", {"n": "NOT"}),
+            _str_to_list("Rv0031 n Rv0098", {"n": "NOT"}),
             ["Rv0031", "NOT", "Rv0098"],
         )
         self.assertEqual(
-            str_to_list("Rv0031 n Rv0098", {"n": "NOT", "Rv": "rv"}),
+            _str_to_list("Rv0031 n Rv0098", {"n": "NOT", "Rv": "rv"}),
             ["rv0031", "NOT", "rv0098"],
         )
         self.assertEqual(
-            str_to_list("~Rv0031", {"~": "NOT "}), ["NOT", "Rv0031"]
+            _str_to_list("~Rv0031", {"~": "NOT "}), ["NOT", "Rv0031"]
         )
 
 
 class TestToPostfix(unittest.TestCase):
     def test_single_token(self):
-        self.assertEqual(to_postfix(["Rv0031"]), ["Rv0031"])
+        self.assertEqual(_to_postfix(["Rv0031"]), ["Rv0031"])
 
     def test_single_infix(self):
         self.assertEqual(
-            to_postfix(["Rv0031", "AND", "Rv0098"]),
+            _to_postfix(["Rv0031", "AND", "Rv0098"]),
             ["Rv0031", "Rv0098", "AND"],
         )
 
     def test_parenthesis(self):
         self.assertEqual(
-            to_postfix(["(", "Rv0031", "AND", "Rv0098", ")", "OR", "Rv1234"]),
+            _to_postfix(["(", "Rv0031", "AND", "Rv0098", ")", "OR", "Rv1234"]),
             ["Rv0031", "Rv0098", "AND", "Rv1234", "OR"],
         )
 
@@ -103,13 +103,13 @@ class TestToPostfix(unittest.TestCase):
         input_expr = ["5", "*", "2", "-", "1"]
         precedence = {"*": 2, "-": 1}
         output_expr = ["5", "2", "*", "1", "-"]
-        self.assertEqual(to_postfix(input_expr, precedence), output_expr)
+        self.assertEqual(_to_postfix(input_expr, precedence), output_expr)
 
     def test_known_postfix_parenthesis(self):
         input_expr = ["5", "*", "(", "2", "-", "3", ")"]
         precedence = {"*": 2, "-": 1}
         output_expr = ["5", "2", "3", "-", "*"]
-        self.assertEqual(to_postfix(input_expr, precedence), output_expr)
+        self.assertEqual(_to_postfix(input_expr, precedence), output_expr)
 
 
 class TestEvalGpr(unittest.TestCase):
