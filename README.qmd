@@ -130,25 +130,25 @@ print(f"iMAT Flux Distribution: \n{imat_results.fluxes}")
 The `model_creation` submodule contains functions for creating new models based on the results of iMAT. The main function is `generate_model`, which takes a model, and a series of reaction weights, and returns a new model with restrictions based on the iMAT results.  
 
 The available methods for creating a model based on an iMAT flux distribution is:  
-- `imat_restrictions`
+- ``imat_restrictions``
   Adds the binary variables and constraints used in the iMAT algorithm, as well as an additional
   constraint ensuring that the flux distribution is within tolerance of the optimal iMAT objective 
   value. This method stays closest to the iMAT objective, but the included indicator (binary) 
   variables mean that is unsuitable for sampling. 
 
-- `simple_bounds`
+- ``simple_bounds``
   Adds bounds on the reactions found to be "on", and "off" in iMAT. For all the highly 
-  expressed reactions found to be "on", the flux is constrained to be at least `epsilon`. 
+  expressed reactions found to be "on", the flux is constrained to be at least ``epsilon``. 
   For all the lowly expressed reactions found to be "off", the flux is constrained to be 
-  below `threshold`. 
+  below ``threshold``. 
 
-- `subset`
+- ``subset``
   Removes reactions from the model which are found to be "off". For all the lowly expressed
-  reactions found to be off, they are constrained to have a flux below `threshold`. 
+  reactions found to be off, they are constrained to have a flux below ``threshold``. 
 
-- `fva`
+- ``fva``
   Finds bounds using an FVA like approach. A temporary model is created in a simmilar way to the 
-- `imat_restrictions` method above, which includes the imat variables, constraints, and which also 
+  ``imat_restrictions`` method above, which includes the imat variables, constraints, and which also 
   constrains the flux distribution to be near optimal for iMAT. The maximum and minimum fluxes 
   allowed through each reaction (while still maintaining the optimal iMAT objective) is found. 
   These values are used as the new reaction bounds. It should be noted, that although the individual
@@ -156,7 +156,7 @@ The available methods for creating a model based on an iMAT flux distribution is
   with the optimal iMAT objective, this doesn't guarantee that the flux distribution overall is 
   consistant with the optimal iMAT objective.
 
-- `milp`
+- ``milp``
   Uses a set of mixed integer linear programs to find whether a reaction should be forced 
   off, forward, or reverse. Each reaction in turn is forced to be off, active in the forward 
   direction, and active in the reverse direction, and the iMAT objective is maximized. Whether 

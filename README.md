@@ -221,17 +221,16 @@ indicator (binary) variables mean that is unsuitable for sampling.
   constrained to have a flux below `threshold`.
 
 - `fva` Finds bounds using an FVA like approach. A temporary model is
-  created in a simmilar way to the
-
-- `imat_restrictions` method above, which includes the imat variables,
-  constraints, and which also constrains the flux distribution to be
-  near optimal for iMAT. The maximum and minimum fluxes allowed through
-  each reaction (while still maintaining the optimal iMAT objective) is
-  found. These values are used as the new reaction bounds. It should be
-  noted, that although the individual upper and lower bounds for the
-  reaction are achievable for each reation while being consistant with
-  the optimal iMAT objective, this doesn’t guarantee that the flux
-  distribution overall is consistant with the optimal iMAT objective.
+  created in a simmilar way to the `imat_restrictions` method above,
+  which includes the imat variables, constraints, and which also
+  constrains the flux distribution to be near optimal for iMAT. The
+  maximum and minimum fluxes allowed through each reaction (while still
+  maintaining the optimal iMAT objective) is found. These values are
+  used as the new reaction bounds. It should be noted, that although the
+  individual upper and lower bounds for the reaction are achievable for
+  each reation while being consistant with the optimal iMAT objective,
+  this doesn’t guarantee that the flux distribution overall is
+  consistant with the optimal iMAT objective.
 
 - `milp` Uses a set of mixed integer linear programs to find whether a
   reaction should be forced off, forward, or reverse. Each reaction in
