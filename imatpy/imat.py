@@ -260,7 +260,7 @@ def add_imat_objective(
     :return: None
     """
     imat_model = model.copy()
-    _enforce_binary(imat_model)
+    #_enforce_binary(imat_model) # potentially not needed
     add_imat_objective_(imat_model, rxn_weights)
     return imat_model
 

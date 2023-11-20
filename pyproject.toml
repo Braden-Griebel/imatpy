@@ -7,11 +7,11 @@ license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">3.9,<3.11"
+python = ">=3.9"
 cobra = "^0.27.0"
 numpy = "^1.26.0"
 pandas = ">=1.0.0, <2.0.0"
-optlang = "^1.7.0"
+optlang = "^1.8.1"
 gurobipy = {version = "^10.0.3", optional = true}
 sympy = "^1.12"
 scipy = "^1.11.3"

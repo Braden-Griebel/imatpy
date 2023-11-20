@@ -1,6 +1,6 @@
 # Standard Library Imports
 import re
-from typing import Any
+from typing import Any, Union
 
 # External Imports
 import cobra
@@ -38,7 +38,7 @@ def gene_to_rxn_weights(
 
 def eval_gpr(
     gpr: str, gene_weights: pd.Series, fn_dict: dict = None
-) -> Any | None:
+) -> Union[float, None]:
     """
     Evaluate a single GPR string using the provided gene weights and
     function dictionary.

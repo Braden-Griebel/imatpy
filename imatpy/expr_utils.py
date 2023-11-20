@@ -3,7 +3,7 @@ Module containing utility functions for working with gene expression
 data, and converting it into qualitative weights
 """
 # Standard library imports
-from typing import Callable
+from typing import Callable, Union
 from warnings import warn
 
 # External imports
@@ -16,10 +16,10 @@ import pandas as pd
 from imatpy.parse_gpr import eval_gpr, gene_to_rxn_weights
 
 
-def expr_to_weights(expression: pd.Series | pd.DataFrame,
-                    quantile: float | tuple[float, float] = 0.15,
+def expr_to_weights(expression: Union[pd.Series, pd.DataFrame],
+                    quantile: Union[float, tuple[float, float]] = 0.15,
                     aggregator: Callable[[ArrayLike], float] = np.median,
-                    sample_axis: int | str = 1,
+                    sample_axis: Union[int, str] = 1,
                     ) -> pd.Series:
     """
     Convert gene expression data to qualitative weights
