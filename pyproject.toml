@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "imatpy"
 version = "0.1.0"
-description = "\"Python implementation of the Integrative Metabolic Analysis Tool (iMAT) algorithm for context specific metabolic modeling.\""
+description = "Python implementation of the Integrative Metabolic Analysis Tool (iMAT) algorithm for context specific metabolic modeling."
 authors = ["Braden Griebel"]
 license = "MIT"
 readme = "README.md"
