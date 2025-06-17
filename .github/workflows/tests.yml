@@ -38,9 +38,9 @@ jobs:
     - name: Install iMATpy
       run: | # Currently, cplex works with up to 3.12, but not beyond. Pinning in this way to make update to 3.13 easier
         if [[ "${{ matrix.python-version }}" == "3.9" || "${{ matrix.python-version }}" == "3.10" || "${{ matrix.python-version }}" == "3.11"  || "${{ matrix.python-version }}" == "3.12" ]]; then
-          uv pip install ".[gurobi,excel,fastparquet,cplex,hybrid]"
+          uv pip install ".[gurobipy,excel,fastparquet,cplex,hybrid]"
         else
-          uv pip install ".[gurobi,excel,fastparquet,hybrid]"
+          uv pip install ".[gurobipy,excel,fastparquet,hybrid]"
         fi
     - name: Instal Tools
       run: uv pip install pytest ruff
