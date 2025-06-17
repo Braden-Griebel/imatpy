@@ -388,7 +388,7 @@ def milp_model(model, rxn_weights, epsilon, threshold):
         ]
     milp_results["results"] = (
         milp_results.apply(_milp_eval, axis=1)
-        .replace({-1: np.NaN})
+        .replace({-1: np.nan})
         .replace({2: -1})
         .dropna()
     )
