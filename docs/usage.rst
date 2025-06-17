@@ -5,10 +5,10 @@ Installation
 ************
 
 iMATpy can be installed with pip: ``pip install imatpy``
-  
-iMATpy requires an optimizer to be installed. The default optimizer is ``glpk`` which is installed by ``COBRApy``. This package can also be used with Gurobi_ or CPLEX_ 
-which must be installed seperately. Both ``cplex`` and ``gurobi`` have free academic licenses. Once installed, the optimizer can be changed by setting the solver property 
-of a model, and the default can be changed via ``COBRApy`` config, by changing the ``solver`` property of the ``cobra.core.configuration.Configuration()`` object (see `cobrapy documentation`_). 
+
+iMATpy requires an optimizer to be installed. The default optimizer is ``glpk`` which is installed by ``COBRApy``. This package can also be used with Gurobi_ or CPLEX_
+which must be installed seperately. Both ``cplex`` and ``gurobi`` have free academic licenses. Once installed, the optimizer can be changed by setting the solver property
+of a model, and the default can be changed via ``COBRApy`` config, by changing the ``solver`` property of the ``cobra.core.configuration.Configuration()`` object (see `cobrapy documentation`_).
 
 .. _Gurobi: https://www.gurobi.com/
 .. _CPLEX: https://www.ibm.com/products/ilog-cplex-optimization-studio/cplex-optimizer
@@ -16,40 +16,40 @@ of a model, and the default can be changed via ``COBRApy`` config, by changing t
 
 Package Structure
 *****************
-The package is divided into four main submodules, ``imat``, ``model_creation``, ``parse_gpr``, and ``model_utils``. 
+The package is divided into four main submodules, ``imat``, ``model_creation``, ``parse_gpr``, and ``model_utils``.
 
-- ``imat``: submodule containing functions for running the iMAT algorithm and generating flux distributions. 
+- ``imat``: submodule containing functions for running the iMAT algorithm and generating flux distributions.
 - ``model_creation``: submodule contains functions for creating models based on iMAT solutions. Doesn't require using any of the `imat` functions seperately,
-  as they are called internally as needed for the different model creation methods. 
+  as they are called internally as needed for the different model creation methods.
 - ``parse_gpr``: submodule contains functions for using the gene protein reaction rules in a model for converting gene expression weights into reaction weights.
   The gene expression data should already be converted into weights before using these functions (and so should only contain -1, 0, and 1). The functions assume a
   single series to be used, so to use multiple observations, the data should be combined (e.g. by taking the mean or median) before using these functions.
 - ``model_utils``: submodule contains various utility functions for working with models. This includes helper functions for reading a writing models to various formats,
-  as well as functions for checking if two models are equivalent.   
+  as well as functions for checking if two models are equivalent.
 
 
 
 Workflow
 ********
-  
+
 
 1. Normalize gene expression data for sequencing depth and gene length (TPM or RPKM both work well)
 2. Quantile normalize the gene expression data (for example with the `qnorm package`_) (This is optional, but can help make the results less sensitive to parameters)
 3. Combine gene expression values accross samples, for example by taking the mean or median
-4. Convert the gene expression data into qualitative weights, of -1, 0, or 1, where -1 represents low expression, 1 represents high expression, and 0 represents all other genes. This can be done by setting the bottom 15% of genes to -1, the top 15% of genes to 1, and all other genes to 0. Other percentiles can be used, but 15% is a decent starting point. 
+4. Convert the gene expression data into qualitative weights, of -1, 0, or 1, where -1 represents low expression, 1 represents high expression, and 0 represents all other genes. This can be done by setting the bottom 15% of genes to -1, the top 15% of genes to 1, and all other genes to 0. Other percentiles can be used, but 15% is a decent starting point.
 5. Using the `parse_gpr` submodule, specifically the `gene_to_rxn_weights` function, convert the gene weights into reaction weights using the GPR rules in the model.
-6. Either generate a flux distribution with the iMAT algorithm, or construct a new model with restrictions based on iMAT results. 
+6. Either generate a flux distribution with the iMAT algorithm, or construct a new model with restrictions based on iMAT results.
 
-    - To generate a flux distribution, use the `imatpy.imat` submodule, specifically the `imat` function. This function takes a model, and a series of reaction weights, and returns a flux distribution which maximizes the sum of reactions with high expression which have a flux above `epsilon`, and reactions with low expression which have a flux below `threshold`.  
+    - To generate a flux distribution, use the `imatpy.imat` submodule, specifically the `imat` function. This function takes a model, and a series of reaction weights, and returns a flux distribution which maximizes the sum of reactions with high expression which have a flux above `epsilon`, and reactions with low expression which have a flux below `threshold`.
     - To generate a model with restrictions based on the iMAT results, use the `model_creation` submodule. It includes a variety of different methods for generating models based on iMAT, with a wrapper function `generate_model` for convinience.
 
 .. _qnorm package: https://pypi.org/project/qnorm/
 
 Parse GPR
 *********
-The ``parse_gpr`` submodule has functions for applying the gene-protien-reaction (GPR) rules in a model to gene weights in order to convert gene weights into reaction weights which can act as input to the iMAT algorithm.   
+The ``parse_gpr`` submodule has functions for applying the gene-protien-reaction (GPR) rules in a model to gene weights in order to convert gene weights into reaction weights which can act as input to the iMAT algorithm.
 
-The input to this method is a pandas Series with the index being the gene identifiers, and the values being the gene weights. The output is a pandas Series with the index being the reaction identifiers, and the values being the reaction weights. This method only handles a single series, so the gene expression data must be processed into single weights (with -1 representing lowly expressed genes, 1 representing highly expressed genes, and 0 for all other genes).   
+The input to this method is a pandas Series with the index being the gene identifiers, and the values being the gene weights. The output is a pandas Series with the index being the reaction identifiers, and the values being the reaction weights. This method only handles a single series, so the gene expression data must be processed into single weights (with -1 representing lowly expressed genes, 1 representing highly expressed genes, and 0 for all other genes).
 
 Here is an example of how to use this method:
 
@@ -91,12 +91,12 @@ Here is an example of how to use this method:
 
 iMAT methods
 ************
-The ``imat`` submodule contains functions for running the iMAT algorithm. The main function is ``imat``, which takes a model, and a series of reaction weights, and returns a flux distribution which maximizes the sum of reactions with high expression which have a flux above ``epsilon``, and reactions with low expression which have a flux below ``threshold``.  
+The ``imat`` submodule contains functions for running the iMAT algorithm. The main function is ``imat``, which takes a model, and a series of reaction weights, and returns a flux distribution which maximizes the sum of reactions with high expression which have a flux above ``epsilon``, and reactions with low expression which have a flux below ``threshold``.
 
 Here is an example of how to use this method:
 
 .. exec_code::
-   
+
    # External imports
    from cobra.core.configuration import Configuration
    import pandas as pd
@@ -126,48 +126,48 @@ Here is an example of how to use this method:
 Model Creation
 **************
 
-The ``model_creation`` submodule contains functions for creating new models based on the results of iMAT. The main function is ``generate_model``, which takes a model, and a series of reaction weights, and returns a new model with restrictions based on the iMAT results.  
+The ``model_creation`` submodule contains functions for creating new models based on the results of iMAT. The main function is ``generate_model``, which takes a model, and a series of reaction weights, and returns a new model with restrictions based on the iMAT results.
 
 The available methods for creating a model based on an iMAT flux distribution is:
 
 ``imat_restrictions``
   Adds the binary variables and constraints used in the iMAT algorithm, as well as an additional
-  constraint ensuring that the flux distribution is within tolerance of the optimal iMAT objective 
-  value. This method stays closest to the iMAT objective, but the included indicator (binary) 
-  variables mean that is unsuitable for sampling. 
+  constraint ensuring that the flux distribution is within tolerance of the optimal iMAT objective
+  value. This method stays closest to the iMAT objective, but the included indicator (binary)
+  variables mean that is unsuitable for sampling.
 
 ``simple_bounds``
-  Adds bounds on the reactions found to be "on", and "off" in iMAT. For all the highly 
-  expressed reactions found to be "on", the flux is constrained to be at least ``epsilon``. 
-  For all the lowly expressed reactions found to be "off", the flux is constrained to be 
-  below ``threshold``. 
+  Adds bounds on the reactions found to be "on", and "off" in iMAT. For all the highly
+  expressed reactions found to be "on", the flux is constrained to be at least ``epsilon``.
+  For all the lowly expressed reactions found to be "off", the flux is constrained to be
+  below ``threshold``.
 
 ``subset``
   Removes reactions from the model which are found to be "off". For all the lowly expressed
-  reactions found to be off, they are constrained to have a flux below ``threshold``. 
+  reactions found to be off, they are constrained to have a flux below ``threshold``.
 
 ``fva``
-  Finds bounds using an FVA like approach. A temporary model is created in a simmilar way to the 
-  ``imat_restrictions`` method above, which includes the imat variables, constraints, and which also 
-  constrains the flux distribution to be near optimal for iMAT. The maximum and minimum fluxes 
-  allowed through each reaction (while still maintaining the optimal iMAT objective) is found. 
+  Finds bounds using an FVA like approach. A temporary model is created in a simmilar way to the
+  ``imat_restrictions`` method above, which includes the imat variables, constraints, and which also
+  constrains the flux distribution to be near optimal for iMAT. The maximum and minimum fluxes
+  allowed through each reaction (while still maintaining the optimal iMAT objective) is found.
   These values are used as the new reaction bounds. It should be noted, that although the individual
-  upper and lower bounds for the reaction are achievable for each reation while being consistant 
-  with the optimal iMAT objective, this doesn't guarantee that the flux distribution overall is 
+  upper and lower bounds for the reaction are achievable for each reation while being consistant
+  with the optimal iMAT objective, this doesn't guarantee that the flux distribution overall is
   consistant with the optimal iMAT objective.
 
 ``milp``
-  Uses a set of mixed integer linear programs to find whether a reaction should be forced 
-  off, forward, or reverse. Each reaction in turn is forced to be off, active in the forward 
-  direction, and active in the reverse direction, and the iMAT objective is maximized. Whether 
+  Uses a set of mixed integer linear programs to find whether a reaction should be forced
+  off, forward, or reverse. Each reaction in turn is forced to be off, active in the forward
+  direction, and active in the reverse direction, and the iMAT objective is maximized. Whether
   a reaction should be forced off, or active in either the forward or reverse direction is then
-  determined by which direction maximizes the iMAT objective. Again, it should be noted that 
-  this doesn't guarantee that the iMAT objective is overall maximized by solutions to this model. 
+  determined by which direction maximizes the iMAT objective. Again, it should be noted that
+  this doesn't guarantee that the iMAT objective is overall maximized by solutions to this model.
 
 Here is an example of how to use this method:
 
 .. exec_code::
-   
+
    # External imports
    from cobra.core.configuration import Configuration
    import pandas as pd
@@ -239,8 +239,4 @@ Here is an example of using the model comparison method:
    model_copy.reactions.get_by_id("r_A_B_D_E").lower_bound = -314
 
    # Check that the models are no longer equivalent
-   print(f"Models are equivalent: {model_eq(model, model_copy)}")   
-
-
-
-
+   print(f"Models are equivalent: {model_eq(model, model_copy)}")

@@ -46,8 +46,7 @@ jobs:
       run: uv pip install pytest ruff
     - name: Lint with ruff
       run: |
-        ruff check --output-format=github ./metworkpy
+        ruff check --output-format=github .
     - name: Test with Pytest
       run: |
         pytest . -W ignore::DeprecationWarning
-  

@@ -6,13 +6,13 @@
 Welcome to iMATpy's documentation!
 ==================================
 
-Welcome to the documentation for iMATpy, a package for using the iMAT algorithm to integrate gene expression data with genome scale metabolic models. 
+Welcome to the documentation for iMATpy, a package for using the iMAT algorithm to integrate gene expression data with genome scale metabolic models.
 
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-   
+
    intro
    usage
    modules

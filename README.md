@@ -3,7 +3,7 @@
 <img src="./imatpy_logo.png" height="60" alt="logo" />
 
 [![Documentation
-Status](https://readthedocs.org/projects/imatpy/badge/?version=latest)](https://imatpy.readthedocs.io/en/latest/?badge=latest)  
+Status](https://readthedocs.org/projects/imatpy/badge/?version=latest)](https://imatpy.readthedocs.io/en/latest/?badge=latest)
 [![Tests](https://github.com/Braden-Griebel/imatpy/actions/workflows/tests.yml/badge.svg)](https://github.com/Braden-Griebel/imatpy/actions/workflows/tests.yml/badge.svg)
 
 ## About
@@ -68,7 +68,7 @@ The general workflow for using this package is as follows:
       a series of reaction weights, and returns a flux distribution
       which maximizes the sum of reactions with high expression which
       have a flux above `epsilon`, and reactions with low expression
-      which have a flux below `threshold`.  
+      which have a flux below `threshold`.
     - To generate a model with restrictions based on the iMAT results,
       use the `model_creation` submodule. It includes a variety of
       different methods for generating models based on iMAT, with a
@@ -176,7 +176,7 @@ print(f"iMAT Flux Distribution: \n{imat_results.fluxes}")
 ```
 
     iMAT Objective: 3.0
-    iMAT Flux Distribution: 
+    iMAT Flux Distribution:
     R_A_e_ex    -1.0
     R_B_e_ex    -1.0
     R_C_e_ex    -1.0
@@ -203,7 +203,7 @@ models based on the results of iMAT. The main function is
 and returns a new model with restrictions based on the iMAT results.
 
 The available methods for creating a model based on an iMAT flux
-distribution is:  
+distribution is:
 - `imat_restrictions` Adds the binary variables and constraints used in
 the iMAT algorithm, as well as an additional constraint ensuring that
 the flux distribution is within tolerance of the optimal iMAT objective
@@ -324,23 +324,23 @@ print(f"Models are equivalent: {model_eq(model, model_copy)}")
 ## License
 
 This package itself is relased under an MIT license. It makes use of
-several libraries which are listed below:  
+several libraries which are listed below:
 - COBRApy: Released under the LGPL-2.0-or-later license see
-[here](https://github.com/opencobra/cobrapy/blob/devel/LICENSE)  
+[here](https://github.com/opencobra/cobrapy/blob/devel/LICENSE)
 - Numpy: Released under the BSD-3-Clause license see
-[here](https://github.com/numpy/numpy/blob/main/LICENSE.txt)  
+[here](https://github.com/numpy/numpy/blob/main/LICENSE.txt)
 - Optlang: Released under the Apache-2.0 lisence see
-[here](https://github.com/opencobra/optlang/blob/master/LICENSE)  
+[here](https://github.com/opencobra/optlang/blob/master/LICENSE)
 - Pandas: Released under the BSD-3-Clause license see
-[here](https://github.com/pandas-dev/pandas/blob/main/LICENSE)  
+[here](https://github.com/pandas-dev/pandas/blob/main/LICENSE)
 - Scipy: Released under the BSD-3-Clause license see
-[here](https://github.com/scipy/scipy/blob/main/LICENSE.txt)  
+[here](https://github.com/scipy/scipy/blob/main/LICENSE.txt)
 - Sympy: Released under the BSD-3-Clause license see
 [here](https://github.com/sympy/sympy/blob/master/LICENSE)
 
-In addition, these libraries were used during developement:  
-- black: Used for autoformating  
+In addition, these libraries were used during developement:
+- black: Used for autoformating
 - jupyter: Used for rendering quarto documents - flake8: Used for
-linting - pytest: Used for running unittests  
-- Sphinx: Used for generating documentation  
+linting - pytest: Used for running unittests
+- Sphinx: Used for generating documentation
 - sphinx-rtd-theme: Used for formating the documentation

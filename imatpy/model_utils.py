@@ -1,6 +1,7 @@
 """
 Module for model utilities
 """
+
 # External Imports
 import cobra
 import optlang.container
@@ -125,9 +126,7 @@ def _parse_file_type(file_type):
 
 
 # region Model Comparison
-def model_eq(
-    model1: cobra.Model, model2: cobra.Model, verbose: bool = False
-) -> bool:
+def model_eq(model1: cobra.Model, model2: cobra.Model, verbose: bool = False) -> bool:
     """
     Check if two cobra models are equal.
 
@@ -161,9 +160,7 @@ def model_eq(
         if not _check_reaction_eq(reaction1, reaction2, verbose=verbose):
             return False
     # Check objective
-    if not _check_objective_eq(
-        model1.objective, model2.objective, verbose=verbose
-    ):
+    if not _check_objective_eq(model1.objective, model2.objective, verbose=verbose):
         if verbose:
             print("Models have different objectives")
             print(f"Model 1 objective: {model1.objective}")
@@ -216,9 +213,7 @@ def _check_dictlist_subset(
     return True
 
 
-def _check_dictlist_eq(
-    dictlist1: cobra.DictList, dictlist2: cobra.DictList
-) -> bool:
+def _check_dictlist_eq(dictlist1: cobra.DictList, dictlist2: cobra.DictList) -> bool:
     """
     Check if two dictlists are equal.
 
@@ -383,9 +378,7 @@ def _check_variable_eq(var1, var2, verbose: bool = False) -> bool:
     return True
 
 
-def _check_constraint_eq(
-    constraint1, constraint2, verbose: bool = False
-) -> bool:
+def _check_constraint_eq(constraint1, constraint2, verbose: bool = False) -> bool:
     if constraint1.lb != constraint2.lb:
         if verbose:
             print(f"Constraint {constraint1.name} has different lower bounds")
