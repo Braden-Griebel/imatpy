@@ -64,7 +64,8 @@ jobs:
            path: dist/*
   upload_pypi:
     needs: [build_dist]
-    runs_on: ubuntu-latest
+    name: Upload distribution to PyPi
+    runs-on: ubuntu-latest
     environment: pypi
     permissions:
       id-token: write
