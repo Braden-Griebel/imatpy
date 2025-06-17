@@ -1,38 +1,43 @@
-[tool.poetry]
+[project]
 name = "imatpy"
 version = "0.1.0"
 description = "Python implementation of the Integrative Metabolic Analysis Tool (iMAT) algorithm for context specific metabolic modeling."
-authors = ["Braden Griebel"]
-license = "MIT"
+authors = [{ name = "Braden Griebel" }]
+requires-python = ">3.9,<3.11"
 readme = "README.md"
+license = "MIT"
+dependencies = [
+    "cobra>=0.27.0",
+    "numpy>=1.26.0",
+    "pandas>=1.0.0",
+    "optlang>=1.8.3",
+    "sympy>=1.12",
+    "scipy>=1.12.0",
+    "qnorm>=0.8.1,<0.9",
+]
 
-[tool.poetry.dependencies]
-python = ">3.9,<3.11"
-cobra = "^0.27.0"
-numpy = "^1.26.0"
-pandas = ">=1.0.0, <2.0.0"
-optlang = "^1.7.0"
-gurobipy = {version = "^10.0.3", optional = true}
-sympy = "^1.12"
-scipy = "^1.11.3"
-cplex = {version = "22.1.1.0", optional = true}
-qnorm = "^0.8.1"
+[project.optional-dependencies]
+gurobipy = ["gurobipy>=11.0.0"]
+cplex = ["cplex>=22.1.1.0"]
 
-[tool.poetry.group.dev.dependencies]
-pytest = "^7.4.2"
-black = "^23.9.1"
-flake8 = "6.1.0"
+[dependency-groups]
+dev = [
+    "pytest>=7.4.2,<8",
+    "ruff>=0.12.0",
+]
+docs = [
+    "sphinx>=7.2.6,<8",
+    "sphinx-exec-code>=0.10,<0.11",
+    "sphinx-rtd-theme>=1.3.0,<2",
+    "jupyter>=1.0.0,<2",
+]
 
-[tool.poetry.group.docs.dependencies]
-sphinx = "^7.2.6"
-sphinx-exec-code = "^0.10"
-sphinx-rtd-theme = "^1.3.0"
-jupyter = "^1.0.0"
-
-[tool.poetry.extras]
-gurobipy = ["gurobipy"]
-cplex = ["cplex"]
+[tool.uv]
+default-groups = [
+    "dev",
+    "docs",
+]
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"

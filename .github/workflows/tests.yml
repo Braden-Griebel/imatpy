@@ -9,45 +9,45 @@ on:
   pull_request:
     branches: [ "main" ]
 
+env:
+  UV_SYSTEM_PYTHON: 1
+
 jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
-        python-version: ["3.10"]
+        python-version:
+          - "3.9"
+          - "3.10"
+          - "3.11"
+          - "3.12"
+          #- "3.13" # Holding on cobrapy update
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+      with:
+        version: 0.5.26
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
-    - name: cache poetry install
-      uses: actions/cache@v3
-      with:
-        path: ~/.local
-        key: poetry-1.6.1-0
-    - uses: snok/install-poetry@v1
-      with:
-        version: 1.6.1
-        virtualenvs-create: true
-        virtualenvs-in-project: true
-    - name: cache deps
-      id: cache-deps
-      uses: actions/cache@v3
-      with:
-        path: .venv
-        key: pydeps-${{ hashFiles('**/poetry/lock') }}
-    - run: poetry install --no-interaction --no-root
-      if: steps.cache-deps.outputs.cache-hit != 'true'
-    - run: poetry install --no-interaction --with dev --extras "gurobipy cplex"
-    - name: Lint with flake8
+    - name: Install iMATpy
+      run: | # Currently, cplex works with up to 3.12, but not beyond. Pinning in this way to make update to 3.13 easier
+        if [[ "${{ matrix.python-version }}" == "3.9" || "${{ matrix.python-version }}" == "3.10" || "${{ matrix.python-version }}" == "3.11"  || "${{ matrix.python-version }}" == "3.12" ]]; then
+          uv pip install ".[gurobi,excel,fastparquet,cplex,hybrid]"
+        else
+          uv pip install ".[gurobi,excel,fastparquet,hybrid]"
+        fi
+    - name: Instal Tools
+      run: uv pip install pytest ruff
+    - name: Lint with ruff
       run: |
-        # stop the build if there are Python syntax errors or undefined names
-        poetry run flake8 ./imatpy --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        poetry run flake8 ./imatpy --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Test with pytest
+        ruff check --output-format=github ./metworkpy
+    - name: Test with Pytest
       run: |
-        poetry run pytest -W ignore::DeprecationWarning
+        pytest . -W ignore::DeprecationWarning
+  

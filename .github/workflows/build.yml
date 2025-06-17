@@ -1,68 +1,78 @@
 name: Build and Publish
 
-on: push
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+env:
+  UV_SYSTEM_PYTHON: 1
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
-        python-version: ["3.10"]
-
+        python-version:
+          - "3.9"
+          - "3.10"
+          - "3.11"
+          - "3.12"
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: cache poetry install
-      uses: actions/cache@v3
-      with:
-        path: ~/.local
-        key: poetry-1.6.1-0
-    - uses: snok/install-poetry@v1
-      with:
-        version: 1.6.1
-        virtualenvs-create: true
-        virtualenvs-in-project: true
-    - name: cache deps
-      id: cache-deps
-      uses: actions/cache@v3
-      with:
-        path: .venv
-        key: pydeps-${{ hashFiles('**/poetry/lock') }}
-    - run: poetry install --no-interaction --no-root
-      if: steps.cache-deps.outputs.cache-hit != 'true'
-    - run: poetry install --no-interaction
-    - name: Build Package
-      run: |
-        poetry build
-    - name: Store the distribution packages
-      uses: actions/upload-artifact@v3
-      with:
-        name: python-package-distributions
-        path: dist/
-
-  publish-to-pypi:
-    name: Publish to PyPI
-    if: startsWith(github.ref, 'refs/tags/') # only publish on tags
-    needs:
-        - build
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: 0.7.13
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install iMATpy
+        run: | # Currently, cplex works with up to 3.12, but not beyond. Pinning in this way to make update to 3.13 easier
+          if [[ "${{ matrix.python-version }}" == "3.9" || "${{ matrix.python-version }}" == "3.10" || "${{ matrix.python-version }}" == "3.11"  || "${{ matrix.python-version }}" == "3.12" ]]; then
+            uv pip install ".[gurobi,excel,fastparquet,cplex,hybrid]"
+          else
+            uv pip install ".[gurobi,excel,fastparquet,hybrid]"
+          fi
+      - name: Install Tools
+        run: uv pip install pytest ruff
+      - name: Lint with ruff
+        run: |
+          ruff check --output-format=github ./metworkpy
+      - name: Test with Pytest
+        run: |
+          pytest . -W ignore::DeprecationWarning
+  build_dist:
+    needs: test
+    name: Build source distribution
     runs-on: ubuntu-latest
-    environment:
-        name: pypi
-        url: https://pypi.org/p/imatpy
-    permissions:
-        id-token: write
-
     steps:
-    - name: Download all the dists
-      uses: actions/download-artifact@v3
-      with:
-        name: python-package-distributions
-        path: dist/
-    - name: Publish distribution 📦 to PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-
-    
+       - uses: actions/checkout@v4
+       - name: Install uv
+         uses: astral-sh/setup-uv@v3
+         with:
+           version:
+             0.7.13
+       - name: Build sdist
+         run: uv build
+       - name: Upload dist
+         uses: actions/upload-artifact@v4
+         with:
+           name: cibw-dist
+           path: dist/*
+  upload_pypi:
+    needs: [build_dist]
+    runs_on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: cibw-*
+          path: dist
+          merge-multiple: true
+      - name: Publish distribution 📦to PyPi
+        uses: pypa/gh-action-pypi-publish@release/v1
