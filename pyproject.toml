@@ -1,6 +1,6 @@
 [project]
 name = "imatpy"
-version = "0.1.0"
+version = "0.2.0"
 description = "Python implementation of the Integrative Metabolic Analysis Tool (iMAT) algorithm for context specific metabolic modeling."
 authors = [{ name = "Braden Griebel", email = "bgriebel@uw.edu" }]
 # Pinning python to less than 3.13, as cobra has bug in 3.13 with copy functions (fixed in next cobra release)
