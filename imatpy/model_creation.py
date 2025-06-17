@@ -3,6 +3,7 @@ Submodule with functions for creating a context specific model using iMAT
 """
 
 # Standard Library Imports
+from __future__ import annotations
 from typing import Union
 
 # External Imports

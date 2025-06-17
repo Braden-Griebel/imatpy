@@ -3,6 +3,7 @@ Module for model utilities
 """
 
 # External Imports
+from __future__ import annotations
 import cobra
 import optlang.container
 from sympy import parse_expr
